@@ -21,11 +21,20 @@ public class Coffee {
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "caffeine")
-    private int caffeine;
+    @Column(name = "coffee_name")
+    private String coffee_name;
+
+    @Column(name = "size")
+    private int size;
 
     @Column(name = "hot")
     private boolean hot;
+
+    @Column(name = "caffeine")
+    private int caffeine;
+
+    @Column(name = "liked")
+    private boolean liked;
 
     // 생략된 생성자, getter, setter
 }
