@@ -7,3 +7,6 @@ const double horizontalMargin = 16.0;
 
 // 전역적으로 사용할 수 있는 상하 마진
 const double verticalMargin = 56.0;
+
+// 기본 마진 16
+const double basicMargin = 16.0;

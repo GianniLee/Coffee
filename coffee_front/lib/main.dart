@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'views/calendar.dart';
 import 'views/mainview.dart';
 import 'views/myPage.dart';
-import '../const/margins.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _children = [
     CalendarView(),
     MainView(),
+    MainView(),
     MyPageView(),
   ];
 
@@ -45,6 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // 탭 선택 시 호출
         currentIndex: _currentIndex, // 현재 선택된 탭 인덱스
+        backgroundColor: Colors.black, // 배경색을 검은색으로 설정
+        selectedItemColor: Colors.black, // 선택된 아이템의 색상을 흰색으로 설정
+        unselectedItemColor: Colors.grey, // 선택되지 않은 아이템의 색상을 회색으로 설정
+
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
@@ -53,6 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Main',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.coffee),
+            label: 'Add Coffee',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
