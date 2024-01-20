@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'views/calendar.dart';
-import 'views/main.dart';
+import 'views/mainview.dart';
 import 'views/myPage.dart';
+import '../const/margins.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,7 +23,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 0; // 현재 선택된 탭 인덱스
+  int _currentIndex = 1; // 현재 선택된 탭 인덱스
 
   // 각 탭에 매칭되는 위젯 리스트
   final List<Widget> _children = [
