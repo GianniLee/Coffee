@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../const/margins.dart'; // 마진 상수 파일 import
 import '../models/selected_coffee.dart'; // SelectedCoffee 모델 import
@@ -21,10 +20,9 @@ class _MainViewState extends State<MainView> {
   @override
   void initState() {
     super.initState();
-    coffeeList = createDummySelectedCoffeeList();
+    coffeeList = createDummySelectedCoffeeList(); // 여기서 리스트를 초기화
+    _brandNameNotifier = ValueNotifier(coffeeList[0].brandName); // 브랜드명을 초기화
     _temperatureOption = coffeeList[0].isHot;
-    ValueNotifier<String> _brandNameNotifier =
-        ValueNotifier(coffeeList[0].brandName); // 초기 값으로 "Starbucks" 설정
   }
 
   @override
@@ -49,11 +47,11 @@ class _MainViewState extends State<MainView> {
             ),
 
             _buildBrandText(), // Starbucks 텍스트 부분
-            SizedBox(
+            const SizedBox(
               height: basicMargin,
             ),
             _buildCoffeeCards(context, coffeeList), // 수정된 부분
-            SizedBox(
+            const SizedBox(
               height: basicMargin,
             ),
             _buildHotColdOption(_temperatureOption),
@@ -72,7 +70,7 @@ class _MainViewState extends State<MainView> {
       valueListenable: _brandNameNotifier,
       builder: (context, brandName, child) {
         return Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: horizontalMargin / 2,
             left: horizontalMargin,
             right: horizontalMargin,
@@ -85,7 +83,7 @@ class _MainViewState extends State<MainView> {
               borderRadius: BorderRadius.circular(12), // 모서리 둥글게 처리
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 0),
+                  offset: const Offset(0, 0),
                   blurRadius: 2.0,
                   color: Colors.black.withOpacity(0.25),
                 ),
@@ -119,11 +117,9 @@ class _MainViewState extends State<MainView> {
               MediaQuery.of(context).size.width / 2, coffeeList[index]);
         },
         onPageChanged: (index) {
-          // 페이지가 바뀔 때마다 브랜드명을 업데이트하고 온도 옵션을 업데이트합니다.
-          setState(() {
-            _temperatureOption = coffeeList[index].isHot;
-            _brandNameNotifier.value = coffeeList[index].brandName;
-          });
+          // 페이지가 바뀔 때마다 브랜드명을 업데이트합니다.
+          _brandNameNotifier.value = coffeeList[index].brandName;
+          _temperatureOption = coffeeList[index].isHot;
         },
       ),
     );
@@ -133,13 +129,14 @@ class _MainViewState extends State<MainView> {
   Widget _buildSelectedCoffee(
       BuildContext context, double cardWidth, SelectedCoffee coffee) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 전체 카드 여백
+      margin:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 전체 카드 여백
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12), // 모서리 둥글게 처리
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, 0),
+            offset: const Offset(0, 0),
             blurRadius: 4.0,
             color: Colors.black.withOpacity(0.25),
           ),
@@ -167,7 +164,7 @@ class _MainViewState extends State<MainView> {
                   ),
                 ),
               ),
-              SizedBox(height: 8), // 이미지와 메뉴명 사이 여백
+              const SizedBox(height: 8), // 이미지와 메뉴명 사이 여백
               // 메뉴 이름 (카드 중앙에 정렬)
               Text(
                 coffee.menuName,
@@ -200,25 +197,13 @@ class _MainViewState extends State<MainView> {
   List<SelectedCoffee> createDummySelectedCoffeeList() {
     List<SelectedCoffee> coffeeList = [];
 
-    // // 더미 데이터를 이용하여 SelectedCoffee 객체 생성
-    // for (int i = 0; i < 2; i++) {
-    //   coffeeList.add(createSelectedCoffee({
-    //     'imageUrl': 'lib/sample/starbucks.jpg',
-    //     'brandName': '스타벅스',
-    //     'menuName': '아이스 아메리카노',
-    //     'caffeineAmount': 200,
-    //     'isHot': 1,
-    //     'size': 'M',
-    //   }));
-    // }
-
     coffeeList.add(createSelectedCoffee({
       'imageUrl': 'lib/sample/MegaCoffee.jpg',
       'brandName': '메가커피',
       'menuName': '라떼',
       'caffeineAmount': 230,
       'isHot': 0,
-      'size': 'M',
+      'size': 1,
     }));
 
     coffeeList.add(createSelectedCoffee({
@@ -227,7 +212,7 @@ class _MainViewState extends State<MainView> {
       'menuName': '아이스 아메리카노',
       'caffeineAmount': 200,
       'isHot': 1,
-      'size': 'M',
+      'size': 0,
     }));
 
     coffeeList.add(createSelectedCoffee({
@@ -236,7 +221,7 @@ class _MainViewState extends State<MainView> {
       'menuName': '라떼',
       'caffeineAmount': 230,
       'isHot': 2,
-      'size': 'M',
+      'size': 1,
     }));
 
     coffeeList.add(createSelectedCoffee({
@@ -245,7 +230,7 @@ class _MainViewState extends State<MainView> {
       'menuName': '커피 프라페',
       'caffeineAmount': 230,
       'isHot': 3,
-      'size': 'M',
+      'size': 2,
     }));
 
     return coffeeList;
@@ -263,35 +248,20 @@ class _MainViewState extends State<MainView> {
     );
   }
 
-  String getTemperatureOption(int isHot) {
-    switch (isHot) {
-      case 0:
-        return 'Hot';
-      case 1:
-        return 'Cold';
-      case 2:
-        return 'Only Hot';
-      case 3:
-        return 'Only Cold';
-      default:
-        return 'Hot'; // Default case, can adjust based on requirements
-    }
-  }
-
   Widget _buildHotColdOption(int isHot) {
     List<Widget> buttons = [];
     List<bool> isSelected = [];
 
     if (isHot == 2) {
       // Only Hot
-      buttons.add(Padding(
+      buttons.add(const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Text('Hot'),
       ));
       isSelected = [true];
     } else if (isHot == 3) {
       // Only Cold
-      buttons.add(Padding(
+      buttons.add(const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Text('Cold'),
       ));
@@ -299,11 +269,11 @@ class _MainViewState extends State<MainView> {
     } else {
       // Both Hot and Cold
       buttons.addAll([
-        Padding(
+        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Text('Hot'),
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Text('Cold'),
         ),
@@ -314,7 +284,6 @@ class _MainViewState extends State<MainView> {
     Color fillColor = (isHot == 0 || isHot == 2) ? Colors.red : Colors.blue;
 
     return ToggleButtons(
-      children: buttons,
       isSelected: isSelected,
       onPressed: (int index) {
         setState(() {
@@ -330,6 +299,7 @@ class _MainViewState extends State<MainView> {
       fillColor: fillColor,
       borderColor: Colors.grey,
       selectedBorderColor: Colors.grey,
+      children: buttons,
     );
   }
 }

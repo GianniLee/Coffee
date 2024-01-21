@@ -4,7 +4,7 @@ class SelectedCoffee {
   final String menuName;
   final int caffeineAmount;
   final int isHot;
-  final String size;
+  final int size;
   bool liked = false;
 
   SelectedCoffee({
