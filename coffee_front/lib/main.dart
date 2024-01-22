@@ -4,19 +4,23 @@ import 'views/mainview.dart';
 import 'views/myPage.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -26,10 +30,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // 각 탭에 매칭되는 위젯 리스트
   final List<Widget> _children = [
-    CalendarView(),
-    MainView(),
-    MainView(),
-    MyPageView(),
+    const CalendarView(),
+    const MainView(),
+    const MainView(),
+    const MyPageView(),
   ];
 
   void onTabTapped(int index) {
@@ -49,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedItemColor: Colors.black, // 선택된 아이템의 색상을 흰색으로 설정
         unselectedItemColor: Colors.grey, // 선택되지 않은 아이템의 색상을 회색으로 설정
 
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Calendar',
