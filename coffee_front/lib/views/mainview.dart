@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../const/margins.dart'; // 마진 상수 파일 import
 import '../models/selected_coffee.dart'; // SelectedCoffee 모델 import
+import '../const/color.dart';
+import '../views/selectCoffee.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -16,6 +18,8 @@ class _MainViewState extends State<MainView> {
 
   List<SelectedCoffee> coffeeList = [];
   int _temperatureOption = 0;
+  int _sizeOption = 0;
+  int _caffeineOption = 0;
 
   @override
   void initState() {
@@ -23,6 +27,8 @@ class _MainViewState extends State<MainView> {
     coffeeList = createDummySelectedCoffeeList(); // 여기서 리스트를 초기화
     _brandNameNotifier = ValueNotifier(coffeeList[0].brandName); // 브랜드명을 초기화
     _temperatureOption = coffeeList[0].isHot;
+    _sizeOption = coffeeList[0].size;
+    _caffeineOption = coffeeList[0].caffeineAmount;
   }
 
   @override
@@ -46,7 +52,7 @@ class _MainViewState extends State<MainView> {
               height: basicMargin,
             ),
 
-            _buildBrandText(), // Starbucks 텍스트 부분
+            _buildBrandText(_brandNameNotifier), // Starbucks 텍스트 부분
             const SizedBox(
               height: basicMargin,
             ),
@@ -55,6 +61,18 @@ class _MainViewState extends State<MainView> {
               height: basicMargin,
             ),
             _buildHotColdOption(_temperatureOption),
+            const SizedBox(
+              height: basicMargin,
+            ),
+            _buildSizeOption(_sizeOption),
+            const SizedBox(
+              height: basicMargin,
+            ),
+            _buildCaffeineOption(_caffeineOption),
+            const SizedBox(
+              height: basicMargin * 4,
+            ),
+            _buildNavigateButton(),
             // 추가적인 내용을 여기에 구현할 수 있습니다.
           ],
         ),
@@ -63,11 +81,11 @@ class _MainViewState extends State<MainView> {
   }
 
   // 상단 브랜드 텍스트 생성 함수: 브랜드명 표시
-  Widget _buildBrandText() {
-    _brandNameNotifier =
-        ValueNotifier(coffeeList[0].brandName); // TODO: 여기 리스트가 비어있는 경우도 생각해야함.
+  Widget _buildBrandText(brandNameNotifier) {
+    // _brandNameNotifier =
+    //     ValueNotifier(coffeeList[0].brandName); // TODO: 여기 리스트가 비어있는 경우도 생각해야함.
     return ValueListenableBuilder<String>(
-      valueListenable: _brandNameNotifier,
+      valueListenable: brandNameNotifier,
       builder: (context, brandName, child) {
         return Padding(
           padding: const EdgeInsets.only(
@@ -85,15 +103,15 @@ class _MainViewState extends State<MainView> {
                 BoxShadow(
                   offset: const Offset(0, 0),
                   blurRadius: 2.0,
-                  color: Colors.black.withOpacity(0.25),
+                  color: MyColor.black.withOpacity(0.25),
                 ),
               ],
             ),
             child: Text(
               brandName, // 동적으로 업데이트되는 브랜드명
               style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
               ),
               textAlign: TextAlign.center,
             ),
@@ -118,8 +136,12 @@ class _MainViewState extends State<MainView> {
         },
         onPageChanged: (index) {
           // 페이지가 바뀔 때마다 브랜드명을 업데이트합니다.
-          _brandNameNotifier.value = coffeeList[index].brandName;
-          _temperatureOption = coffeeList[index].isHot;
+          setState(() {
+            _brandNameNotifier.value = coffeeList[index].brandName;
+            _temperatureOption = coffeeList[index].isHot;
+            _sizeOption = coffeeList[index].size;
+            _caffeineOption = coffeeList[index].caffeineAmount;
+          });
         },
       ),
     );
@@ -138,7 +160,7 @@ class _MainViewState extends State<MainView> {
           BoxShadow(
             offset: const Offset(0, 0),
             blurRadius: 4.0,
-            color: Colors.black.withOpacity(0.25),
+            color: MyColor.black.withOpacity(0.25),
           ),
         ],
       ),
@@ -219,7 +241,7 @@ class _MainViewState extends State<MainView> {
       'imageUrl': 'lib/sample/MegaCoffee.jpg',
       'brandName': '메가커피',
       'menuName': '라떼',
-      'caffeineAmount': 230,
+      'caffeineAmount': 777,
       'isHot': 2,
       'size': 1,
     }));
@@ -228,7 +250,7 @@ class _MainViewState extends State<MainView> {
       'imageUrl': 'lib/sample/MegaCoffee_1.jpg',
       'brandName': '메가커피',
       'menuName': '커피 프라페',
-      'caffeineAmount': 230,
+      'caffeineAmount': 543,
       'isHot': 3,
       'size': 2,
     }));
@@ -294,12 +316,76 @@ class _MainViewState extends State<MainView> {
           }
         });
       },
-      selectedColor: Colors.white,
-      color: Colors.black,
+      selectedColor: MyColor.white,
+      color: MyColor.black,
       fillColor: fillColor,
-      borderColor: Colors.grey,
-      selectedBorderColor: Colors.grey,
+      borderColor: MyColor.grey,
+      selectedBorderColor: MyColor.grey,
       children: buttons,
+    );
+  }
+
+  Widget _buildSizeOption(int sizeOption) {
+    List<bool> isSelected = [sizeOption == 0, sizeOption == 1, sizeOption == 2];
+
+    return ToggleButtons(
+      children: <Widget>[
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text('Tall')),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text('Grande')),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text('Venti')),
+      ],
+      isSelected: isSelected,
+      onPressed: (int index) {
+        setState(() {
+          for (int buttonIndex = 0;
+              buttonIndex < isSelected.length;
+              buttonIndex++) {
+            isSelected[buttonIndex] = buttonIndex == index;
+          }
+          sizeOption = index; // 사이즈 옵션 업데이트
+        });
+      },
+      // 버튼 스타일 지정
+      selectedColor: MyColor.white,
+      color: MyColor.black,
+      fillColor: MyColor.black,
+      borderColor: MyColor.grey,
+      selectedBorderColor: MyColor.grey,
+    );
+  }
+
+  Widget _buildCaffeineOption(int caffeineLevel) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            "Caffeine: $caffeineLevel",
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 커피 추가 버튼
+  // 본 페이지에서 새 페이지로 이동하는 버튼
+  Widget _buildNavigateButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SelectCoffeePage()),
+        );
+      },
+      child: Text('Coffee List'),
     );
   }
 }
