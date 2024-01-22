@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../const/margins.dart'; // 마진 상수 파일 import
 import '../models/selected_coffee.dart'; // SelectedCoffee 모델 import
 import '../const/color.dart';
-import '../views/selectCoffee.dart';
+import 'select_coffee.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
