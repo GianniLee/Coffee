@@ -39,6 +39,17 @@ public class CoffeeController {
         }
     }
 
+    @GetMapping("/cold-to-hot/{coffeeIndex}")
+    public ResponseEntity<Coffee> coldToHot(@PathVariable("coffeeIndex") int coffeeIndex) {
+        Coffee hotCoffee = coffeeService.coldToHot(coffeeIndex);
+
+        if (hotCoffee != null) {
+            return ResponseEntity.ok(hotCoffee);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/by-brand/{brand}")
     public ResponseEntity<List<Coffee>> getCoffeeByBrand(@PathVariable("brand") String brand) {
         List<Coffee> coffees = coffeeService.getCoffeeByBrand(brand);
