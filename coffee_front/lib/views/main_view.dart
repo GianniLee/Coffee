@@ -18,17 +18,23 @@ class _MainViewState extends State<MainView> {
 
   List<Coffee> coffeeList = [];
   int _temperatureOption = 0;
-  int _sizeOption = 0;
-  int _caffeineOption = 0;
+  int currentSize = 1; // 기본 사이즈를 1 (Grande)로 설정
+  int _currentPageIndex = 0; // 현재 페이지 인덱스를 추적하는 변수
+  // 각 사이즈별 카페인 양을 저장할 상태 변수
+  int tallCaffeine = 0;
+  int grandeCaffeine = 0;
+  int ventiCaffeine = 0;
 
   @override
   void initState() {
     super.initState();
-    coffeeList = createDummySelectedCoffeeList(); // 여기서 리스트를 초기화
-    _brandNameNotifier = ValueNotifier(coffeeList[0].brandName); // 브랜드명을 초기화
-    _temperatureOption = coffeeList[0].isHot;
-    _sizeOption = coffeeList[0].size;
-    _caffeineOption = coffeeList[0].caffeineAmount;
+    coffeeList = createDummySelectedCoffeeList(); // 리스트를 초기화
+    _brandNameNotifier.value = coffeeList[0].brandName; // 첫 번째 커피 브랜드명으로 초기화
+    _temperatureOption = coffeeList[0].isHot; // 첫 번째 커피의 온도 옵션으로 초기화
+    tallCaffeine = coffeeList[0].tall; // 첫 번째 커피의 카페인 양으로 초기화
+    grandeCaffeine = coffeeList[0].grande;
+    ventiCaffeine = coffeeList[0].venti;
+    _currentPageIndex = 0; // 현재 페이지 인덱스를 0으로 초기화
   }
 
   @override
@@ -41,8 +47,8 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     // 더미 데이터 리스트 생성
-    List<Coffee> coffeeList =
-        createDummySelectedCoffeeList(); // TODO: 여기 사용자가 좋아요한 메뉴 + 최근메뉴 불러오는걸로 변경하셈
+    //List<Coffee> coffeeList =
+    //createDummySelectedCoffeeList(); // TODO: 여기 사용자가 좋아요한 메뉴 + 최근메뉴 불러오는걸로 변경하셈
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -64,11 +70,11 @@ class _MainViewState extends State<MainView> {
             const SizedBox(
               height: basicMargin,
             ),
-            _buildSizeOption(_sizeOption),
+            _buildSizeOption(currentSize),
             const SizedBox(
               height: basicMargin,
             ),
-            _buildCaffeineOption(_caffeineOption),
+            _buildCaffeineOption(),
             const SizedBox(
               height: basicMargin * 4,
             ),
@@ -138,8 +144,10 @@ class _MainViewState extends State<MainView> {
           setState(() {
             _brandNameNotifier.value = coffeeList[index].brandName;
             _temperatureOption = coffeeList[index].isHot;
-            _sizeOption = coffeeList[index].size;
-            _caffeineOption = coffeeList[index].caffeineAmount;
+            currentSize = 1; // 사이즈를 기본값으로 재설정
+            // 해당 커피의 기본 카페인 값을 설정
+
+            _updateCaffeineAmount(index);
           });
         },
       ),
@@ -223,9 +231,10 @@ class _MainViewState extends State<MainView> {
       'imageUrl': 'lib/sample/MegaCoffee.jpg',
       'brandName': '메가커피',
       'menuName': '라떼',
-      'caffeineAmount': 230,
       'isHot': 0,
-      'size': 1,
+      'tall': 75,
+      'grande': 150,
+      'venti': 300,
     }));
 
     coffeeList.add(createSelectedCoffee({
@@ -233,9 +242,10 @@ class _MainViewState extends State<MainView> {
       'imageUrl': 'lib/sample/starbucks.jpg',
       'brandName': '스타벅스',
       'menuName': '아이스 아메리카노',
-      'caffeineAmount': 200,
       'isHot': 1,
-      'size': 0,
+      'tall': 100,
+      'grande': 150,
+      'venti': 200,
     }));
 
     coffeeList.add(createSelectedCoffee({
@@ -243,9 +253,10 @@ class _MainViewState extends State<MainView> {
       'imageUrl': 'lib/sample/MegaCoffee.jpg',
       'brandName': '메가커피',
       'menuName': '라떼',
-      'caffeineAmount': 777,
       'isHot': 2,
-      'size': 1,
+      'tall': -1,
+      'grande': 150,
+      'venti': 200,
     }));
 
     coffeeList.add(createSelectedCoffee({
@@ -253,9 +264,10 @@ class _MainViewState extends State<MainView> {
       'imageUrl': 'lib/sample/MegaCoffee_1.jpg',
       'brandName': '메가커피',
       'menuName': '커피 프라페',
-      'caffeineAmount': 543,
       'isHot': 3,
-      'size': 2,
+      'tall': -1,
+      'grande': 150,
+      'venti': -1,
     }));
 
     return coffeeList;
@@ -268,9 +280,10 @@ class _MainViewState extends State<MainView> {
       imageUrl: data['imageUrl'],
       brandName: data['brandName'],
       menuName: data['menuName'],
-      caffeineAmount: data['caffeineAmount'],
       isHot: data['isHot'],
-      size: data['size'],
+      tall: data['tall'],
+      grande: data['grande'],
+      venti: data['venti'],
     );
   }
 
@@ -347,12 +360,12 @@ class _MainViewState extends State<MainView> {
       isSelected: isSelected,
       onPressed: (int index) {
         setState(() {
-          for (int buttonIndex = 0;
-              buttonIndex < isSelected.length;
-              buttonIndex++) {
-            isSelected[buttonIndex] = buttonIndex == index;
+          currentSize = index;
+          // Update the caffeine content based on the current page and size
+          if (_pageController.hasClients) {
+            final currentPageIndex = _pageController.page!.round();
+            _updateCaffeineAmount(currentPageIndex);
           }
-          sizeOption = index; // 사이즈 옵션 업데이트
         });
       },
       // 버튼 스타일 지정
@@ -364,18 +377,38 @@ class _MainViewState extends State<MainView> {
     );
   }
 
-  Widget _buildCaffeineOption(int caffeineLevel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            "Caffeine: $caffeineLevel",
-            style: TextStyle(fontSize: 16),
-          ),
-        ),
-      ],
+  void _updateCaffeineAmount(int pageIndex) {
+    setState(() {
+      tallCaffeine = coffeeList[pageIndex].tall;
+      grandeCaffeine = coffeeList[pageIndex].grande;
+      ventiCaffeine = coffeeList[pageIndex].venti;
+    });
+  }
+
+  // 카페인 옵션 위젯 생성 함수 수정
+  Widget _buildCaffeineOption() {
+    // 현재 선택된 사이즈에 따른 카페인 양을 상태 변수에서 가져와서 표시
+    int caffeineAmount;
+    switch (currentSize) {
+      case 0:
+        caffeineAmount = tallCaffeine;
+        break;
+      case 1:
+        caffeineAmount = grandeCaffeine;
+        break;
+      case 2:
+        caffeineAmount = ventiCaffeine;
+        break;
+      default:
+        caffeineAmount = grandeCaffeine; // 기본값은 Grande
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(
+        "Caffeine: $caffeineAmount mg",
+        style: TextStyle(fontSize: 16),
+      ),
     );
   }
 
