@@ -3,14 +3,6 @@ import 'dart:math' as math;
 import '../models/coffee.dart';
 import '../models/coffee_record.dart';
 
-// // 카페인 섭취 기록을 나타내는 모델 클래스입니다.
-// class CaffeineIntake {
-//   final DateTime time; // 섭취 시간
-//   final double amount; // 섭취량
-
-//   CaffeineIntake({required this.time, required this.amount});
-// }
-
 class CaffeineGraphPainter extends CustomPainter {
   final double decayConstant;
   final List<CoffeeRecord> coffeeRecords; // CoffeeRecord 리스트로 변경

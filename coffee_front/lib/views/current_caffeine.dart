@@ -167,7 +167,7 @@ class _currentCaffeineView extends State<currentCaffeineView> {
     );
     final record3 = CoffeeRecord(
       date: '20240123',
-      time: '12:40',
+      time: '19:20',
       size: 2,
       coffee: coffee3,
     );
