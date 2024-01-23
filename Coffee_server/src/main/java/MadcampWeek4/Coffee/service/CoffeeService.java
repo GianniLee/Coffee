@@ -74,5 +74,9 @@ public class CoffeeService {
 
         return null;
     }
+
+    public List<Coffee> getCoffeeByBrand(String brand) {
+        return coffeeRepository.findByBrand(brand);
+    }
 }
 
