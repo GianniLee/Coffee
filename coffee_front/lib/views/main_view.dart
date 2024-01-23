@@ -70,7 +70,7 @@ class _MainViewState extends State<MainView> {
             const SizedBox(
               height: basicMargin,
             ),
-            _buildSizeOption(currentSize),
+            _buildSizeOption(),
             const SizedBox(
               height: basicMargin,
             ),
@@ -342,26 +342,48 @@ class _MainViewState extends State<MainView> {
     );
   }
 
-  Widget _buildSizeOption(int sizeOption) {
-    List<bool> isSelected = [sizeOption == 0, sizeOption == 1, sizeOption == 2];
+  Widget _buildSizeOption() {
+    List<Widget> sizeButtons = [];
+    List<bool> isSelected = [];
 
-    return ToggleButtons(
-      children: <Widget>[
+    // Check if tall size is available
+    if (tallCaffeine != -1) {
+      sizeButtons.add(
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text('Tall')),
+      );
+      isSelected
+          .add(currentSize == 0); // Set to true if tall is the current size
+    }
+
+    // Check if grande size is available
+    if (grandeCaffeine != -1) {
+      sizeButtons.add(
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text('Grande')),
+      );
+      isSelected
+          .add(currentSize == 1); // Set to true if grande is the current size
+    }
+    // Check if venti size is available
+    if (ventiCaffeine != -1) {
+      sizeButtons.add(
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text('Venti')),
-      ],
+      );
+      isSelected
+          .add(currentSize == 2); // Set to true if venti is the current size
+    }
+
+    return ToggleButtons(
+      children: sizeButtons,
       isSelected: isSelected,
       onPressed: (int index) {
         setState(() {
           currentSize = index;
-          // Update the caffeine content based on the current page and size
           if (_pageController.hasClients) {
             final currentPageIndex = _pageController.page!.round();
             _updateCaffeineAmount(currentPageIndex);
