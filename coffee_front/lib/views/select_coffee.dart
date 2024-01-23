@@ -27,6 +27,8 @@ class SelectCoffeePage extends StatefulWidget {
 class _SelectCoffeePageState extends State<SelectCoffeePage> {
   int selectedTabIndex = 0;
   List<String> selectedCoffeeData = [];
+  int? selectedCoffeeIndex; // 사용자가 선택한 커피의 인덱스
+  Coffee? selectedCoffee; // 사용자가 선택한 커피 객체
 
   @override
   void initState() {
@@ -162,19 +164,81 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
               itemCount: coffeeTabs[selectedTabIndex].coffeeData.length,
               itemBuilder: (context, index) {
                 Coffee coffee = coffeeTabs[selectedTabIndex].coffeeData[index];
-                return ListTile(
-                  leading:
-                      Image.network(coffee.imageUrl, width: 100, height: 100),
-                  title: Text(coffee.menuName),
-                  // subtitle: Text(
-                  //     '${coffee.brandName}'),
-                  subtitle: Text(
-                      'caffeine: ${coffee.tall}, ${coffee.grande}, ${coffee.venti}'),
-                );
+                return _buildCoffeeListItem(coffee, index);
               },
             ),
           ),
         ],
+      ),
+      floatingActionButton:
+          selectedCoffee != null ? _buildFloatingSelectedCoffeeCard() : null,
+    );
+  }
+
+  Widget _buildCoffeeListItem(Coffee coffee, int index) {
+    bool isSelected = index == selectedCoffeeIndex;
+
+    return ListTile(
+        leading: Image.network(coffee.imageUrl, width: 100, height: 100),
+        title: Text(
+          coffee.menuName,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+        ),
+        subtitle: Text(
+          'caffeine: ${coffee.tall}, ${coffee.grande}, ${coffee.venti}',
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+        ),
+        tileColor: isSelected ? Colors.black : Colors.white, // 배경색 반전
+        onTap: () => _onCoffeeSelected(coffee, index) // 여기서 인덱스도 전달
+        );
+  }
+
+  // 커피 아이템이 탭될 때 호출되는 메소드
+  void _onCoffeeSelected(Coffee coffee, int index) {
+    setState(() {
+      if (selectedCoffee == coffee) {
+        selectedCoffee = null;
+        selectedCoffeeIndex = null; // 선택 해제 시 인덱스도 null로 설정
+      } else {
+        selectedCoffee = coffee;
+        selectedCoffeeIndex = index; // 새로운 커피 선택 시 인덱스 설정
+      }
+    });
+  }
+
+  Widget _buildFloatingSelectedCoffeeCard() {
+    return Positioned(
+      bottom: 16.0,
+      left: 16.0,
+      right: 16.0,
+      child: Card(
+        color: MyColor.black,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.close, color: MyColor.white),
+                onPressed: () => setState(() {
+                  selectedCoffee = null;
+                  selectedCoffeeIndex = null;
+                }),
+              ),
+              Image.network(selectedCoffee!.imageUrl, width: 56, height: 56),
+              Text(
+                selectedCoffee!.menuName,
+                style: TextStyle(color: MyColor.white),
+              ),
+              // 여기에 다른 버튼을 추가할 수 있습니다.
+              // 예를 들어, IconButton을 추가하고 onPressed에 나중에 구현할 기능을 연결할 수 있습니다.
+            ],
+          ),
+        ),
       ),
     );
   }

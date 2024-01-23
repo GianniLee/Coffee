@@ -32,7 +32,7 @@ class Coffee {
     int index = json['coffeeIndex'] ?? 0;
     return Coffee(
       coffeeIndex: index,
-      imageUrl: getCoffeeImage(index), // 이미지 URL 설정 부분을 제거
+      imageUrl: getCoffeeImage(index),
       brandName: json['brandName'] ?? '',
       menuName: json['coffeeName'] ?? '',
       isHot: json['isHot'] ?? 0,

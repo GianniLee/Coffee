@@ -24,11 +24,13 @@ class _currentCaffeineView extends State<currentCaffeineView> {
     _coffeeRecordsFuture = fetchDrinkedCoffees(1);
 
     Timer.periodic(Duration(minutes: 1), (timer) {
-      setState(() {
-        // 그래프 업데이트
-        // 여기서는 coffeeRecords가 변하지 않으므로 실제 앱에서는 이를 적절히 갱신할 필요가 있음
-        // 예를 들면, 새로운 카페인 섭취 이벤트를 coffeeRecords 리스트에 추가할 수 있음
-      });
+      if (mounted) {
+        setState(() {
+          // 그래프 업데이트
+          // 여기서는 coffeeRecords가 변하지 않으므로 실제 앱에서는 이를 적절히 갱신할 필요가 있음
+          // 예를 들면, 새로운 카페인 섭취 이벤트를 coffeeRecords 리스트에 추가할 수 있음
+        });
+      }
     });
   }
 
