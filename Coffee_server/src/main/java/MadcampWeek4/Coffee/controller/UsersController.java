@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
@@ -53,6 +54,21 @@ public class UsersController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping("/{userIndex}/half-life")
+    public ResponseEntity<Integer> getHalfLife(@PathVariable("userIndex") int userIndex) {
+        int halfLife = usersService.getHalfLifeByUserIndex(userIndex);
+        return ResponseEntity.ok(halfLife);
+    }
+
+    @PutMapping("/{userIndex}/update-half-life/{newHalfLife}")
+    public ResponseEntity<Integer> updateHalfLife(
+            @PathVariable("userIndex") int userIndex,
+            @PathVariable("newHalfLife") int newHalfLife) {
+
+        int updatedHalfLife = usersService.updateHalfLife(userIndex, newHalfLife);
+        return ResponseEntity.ok(updatedHalfLife);
     }
 }
 

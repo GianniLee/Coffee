@@ -129,5 +129,23 @@ public class UsersService {
         // Return the original user entity if the user was not found or coffeeIndex was not in liked list
         return optionalUsers.orElse(null);
     }
+
+    public int getHalfLifeByUserIndex(int userIndex) {
+        return usersRepository.findById(userIndex)
+                .map(Users::getHalfLife)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Transactional
+    public int updateHalfLife(int userIndex, int newHalfLife) {
+        Users user = usersRepository.findById(userIndex)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setHalfLife(newHalfLife);
+        usersRepository.save(user);
+
+        return newHalfLife;
+    }
+
 }
 
