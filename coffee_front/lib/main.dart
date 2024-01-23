@@ -1,7 +1,9 @@
+import 'package:coffee_front/const/color.dart';
+import 'package:coffee_front/views/current_caffeine.dart';
 import 'package:flutter/material.dart';
 import 'views/calendar.dart';
-import 'views/mainview.dart';
-import 'views/myPage.dart';
+import 'views/main_view.dart';
+import 'views/my_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,13 +28,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 1; // 현재 선택된 탭 인덱스
+  int _currentIndex = 0; // 현재 선택된 탭 인덱스
 
   // 각 탭에 매칭되는 위젯 리스트
   final List<Widget> _children = [
+    const currentCaffeineView(),
+    const MainView(),
     const CalendarView(),
-    const MainView(),
-    const MainView(),
     const MyPageView(),
   ];
 
@@ -49,22 +51,22 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // 탭 선택 시 호출
         currentIndex: _currentIndex, // 현재 선택된 탭 인덱스
-        backgroundColor: Colors.black, // 배경색을 검은색으로 설정
-        selectedItemColor: Colors.black, // 선택된 아이템의 색상을 흰색으로 설정
-        unselectedItemColor: Colors.grey, // 선택되지 않은 아이템의 색상을 회색으로 설정
+        backgroundColor: MyColor.black, // 배경색을 검은색으로 설정
+        selectedItemColor: MyColor.black, // 선택된 아이템의 색상을 흰색으로 설정
+        unselectedItemColor: MyColor.grey, // 선택되지 않은 아이템의 색상을 회색으로 설정
 
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.auto_graph),
             label: 'Main',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.coffee),
             label: 'Add Coffee',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
