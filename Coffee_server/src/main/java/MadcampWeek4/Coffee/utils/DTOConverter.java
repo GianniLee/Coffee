@@ -9,6 +9,8 @@ public class DTOConverter {
         dto.setDrinkedCoffeeIndex(drinkedCoffee.getDrinkedCoffeeIndex());
         dto.setDate(drinkedCoffee.getDate());
         dto.setTime(drinkedCoffee.getTime());
+        dto.setCoffee(drinkedCoffee.getCoffee()); // Coffee 객체 설정
+        dto.setSize(drinkedCoffee.getSize());
         return dto;
     }
 }

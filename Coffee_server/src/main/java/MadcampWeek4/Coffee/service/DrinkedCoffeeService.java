@@ -44,18 +44,21 @@ public class DrinkedCoffeeService {
             drinkedCoffee1.setCoffee(coffee1);
             drinkedCoffee1.setDate("2024-01-23");
             drinkedCoffee1.setTime("10:00:00");
+            drinkedCoffee1.setSize(1);
 
             DrinkedCoffee drinkedCoffee2 = new DrinkedCoffee();
             drinkedCoffee2.setUser(user1);
             drinkedCoffee2.setCoffee(coffee2);
             drinkedCoffee2.setDate("2024-01-23");
             drinkedCoffee2.setTime("12:30:00");
+            drinkedCoffee1.setSize(2);
 
             DrinkedCoffee drinkedCoffee3 = new DrinkedCoffee();
             drinkedCoffee3.setUser(user2);
             drinkedCoffee3.setCoffee(coffee1);
             drinkedCoffee3.setDate("2024-01-24");
             drinkedCoffee3.setTime("08:45:00");
+            drinkedCoffee1.setSize(0);
 
             // Save the dummy DrinkedCoffee entries
             drinkedCoffeeRepository.saveAll(Arrays.asList(drinkedCoffee1, drinkedCoffee2, drinkedCoffee3));
@@ -77,16 +80,26 @@ public class DrinkedCoffeeService {
 //
 //        return List.of(); // 사용자가 없으면 빈 목록 반환
 //    }
-@Transactional
-public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
-    Users user = usersRepository.findById(userIndex).orElse(null);
+    @Transactional
+    public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
+        Users user = usersRepository.findById(userIndex).orElse(null);
 
-    if (user != null) {
-        return drinkedCoffeeRepository.findByUser(user);
+        if (user != null) {
+            return drinkedCoffeeRepository.findByUser(user);
+        }
+
+        return List.of(); // 사용자가 없으면 빈 목록 반환
     }
-
-    return List.of(); // 사용자가 없으면 빈 목록 반환
-}
+//    @Transactional
+//    public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
+//        Users user = usersRepository.findById(userIndex).orElse(null);
+//
+//        if (user != null) {
+//            return drinkedCoffeeRepository.findByUser(user);
+//        }
+//
+//        return List.of(); // 사용자가 없으면 빈 목록 반환
+//    }
 
 
 
