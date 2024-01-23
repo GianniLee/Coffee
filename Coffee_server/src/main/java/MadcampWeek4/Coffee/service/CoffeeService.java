@@ -75,6 +75,18 @@ public class CoffeeService {
         return null;
     }
 
+    @Transactional(readOnly = true)
+    public Coffee coldToHot(int coffeeIndex) {
+        Coffee coldCoffee = coffeeRepository.findById(coffeeIndex).orElse(null);
+
+        if (coldCoffee != null && coldCoffee.getCoffeeName().startsWith("아이스 ")) {
+            String hotCoffeeName = coldCoffee.getCoffeeName().substring(4); // "아이스 "를 제거
+            return coffeeRepository.findByCoffeeName(hotCoffeeName).orElse(null);
+        }
+
+        return null;
+    }
+
     public List<Coffee> getCoffeeByBrand(String brand) {
         return coffeeRepository.findByBrand(brand);
     }
