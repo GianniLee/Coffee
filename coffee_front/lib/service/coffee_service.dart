@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 var logger = Logger();
 
 Future<List<Coffee>> fetchCoffeeDataByBrand(String brandName) async {
-  var url = Uri.parse('http://127.0.0.1:8080/coffee/by-brand/$brandName');
+  var url = Uri.parse('http://172.10.7.70:80/coffee/by-brand/$brandName');
 
   // HTTP 요청 전 로그
   logger.d('Requesting data for $brandName');
