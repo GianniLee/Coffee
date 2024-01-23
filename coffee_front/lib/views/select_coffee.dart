@@ -78,7 +78,7 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
             venti: 300),
         Coffee(
             coffeeIndex: 4,
-            imageUrl: 'http://172.10.7.70:80/0.jpg',
+            imageUrl: getCoffeeImage(0),
             brandName: 'Recent',
             menuName: 'recent 커피 데이터 2',
             isHot: 1,

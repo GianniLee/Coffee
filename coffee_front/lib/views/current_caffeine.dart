@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../views/caffeine_graph_painter.dart'; // 분리된 파일을 임포트합니다.
 import '../models/coffee.dart';
 import '../models/coffee_record.dart';
+import '../service/coffee_service.dart';
 
 class currentCaffeineView extends StatefulWidget {
   const currentCaffeineView({super.key});
@@ -12,12 +13,15 @@ class currentCaffeineView extends StatefulWidget {
 }
 
 class _currentCaffeineView extends State<currentCaffeineView> {
-  late final List<CoffeeRecord> coffeeRecords; // CoffeeRecord 리스트를 저장할 변수
+  // 서버에서 가져온 커피 기록 데이터를 저장할 Future 객체
+  Future<List<CoffeeRecord>>? _coffeeRecordsFuture;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    coffeeRecords = createDummyData(); // CoffeeRecord 더미 데이터 생성
+    // 서버에서 사용자의 마신 커피 기록을 비동기적으로 가져옵니다.
+    _coffeeRecordsFuture = fetchDrinkedCoffees(1);
 
     Timer.periodic(Duration(minutes: 1), (timer) {
       setState(() {
@@ -29,34 +33,57 @@ class _currentCaffeineView extends State<currentCaffeineView> {
   }
 
   @override
+  void dispose() {
+    // 위젯이 dispose될 때 Timer를 취소합니다.
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double graphWidth = screenWidth - 32;
 
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          SizedBox(height: 32),
-          Center(
-            child: Container(
-              width: graphWidth,
-              height: 150,
-              child: CustomPaint(
-                size: Size(graphWidth, 150),
-                painter: CaffeineGraphPainter(
-                  decayConstant: 0.14,
-                  coffeeRecords: coffeeRecords,
+    // FutureBuilder를 사용하여 비동기 데이터를 처리합니다.
+    return FutureBuilder<List<CoffeeRecord>>(
+      future: _coffeeRecordsFuture,
+      builder: (context, snapshot) {
+        // 데이터 로딩 중이라면 로딩 인디케이터를 표시
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // 데이터 로딩 중 오류 발생 시 오류 메시지를 표시
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 32),
+                Center(
+                  child: Container(
+                    width: graphWidth,
+                    height: 150,
+                    child: CustomPaint(
+                      size: Size(graphWidth, 150),
+                      painter: CaffeineGraphPainter(
+                        decayConstant: 0.14,
+                        coffeeRecords: snapshot.data!,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(height: 32),
+                Container(
+                  height: 200,
+                  child: _buildCoffeeRecentList(snapshot.data!),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 32), // 그래프와 리스트 사이의 간격
-          Container(
-            height: 200, // ListView가 차지할 명시적인 높이
-            child: _buildCoffeeRecentList(coffeeRecords),
-          ),
-        ],
-      ),
+          );
+        } else {
+          return Center(child: Text('No data available'));
+        }
+      },
     );
   }
 
@@ -102,7 +129,7 @@ class _currentCaffeineView extends State<currentCaffeineView> {
           leading: Container(
             width: 50, // 이미지의 너비를 제한합니다.
             height: 50, // 이미지의 높이를 제한합니다.
-            child: Image.asset(record.coffee.imageUrl), // 로컬 이미지를 사용하는 경우
+            child: Image.network(record.coffee.imageUrl), // 로컬 이미지를 사용하는 경우
           ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
