@@ -9,22 +9,21 @@ Future<List<Coffee>> fetchCoffeeDataByBrand(String brandName) async {
   var url = Uri.parse('http://172.10.7.70:80/coffee/by-brand/$brandName');
 
   // HTTP 요청 전 로그
-  logger.d('Requesting data for $brandName');
-  print("before response");
+  //logger.d('Requesting data for $brandName');
+  //print("before response");
   final response = await http.get(url);
-  print("response get");
+  //print("response get");
   // HTTP 응답 후 로그
-  logger.d('Response received for $brandName');
+  //logger.d('Response received for $brandName');
 
-  // if (response.statusCode == 200) {
-  //   List<dynamic> jsonData = jsonDecode(response.body);
-  //   logger.d(jsonData); // Debug 로그
-  //   return jsonData.map((json) => Coffee.fromJson(json)).toList();
-  // } else {
-  //   logger.e('Failed to load coffee data for $brandName'); // Error 로그
-  //   throw Exception('Failed to load coffee data for $brandName');
-  // }
-  List<dynamic> jsonData = jsonDecode(response.body);
-  logger.d(jsonData); // Debug 로그
-  return jsonData.map((json) => Coffee.fromJson(json)).toList();
+  if (response.statusCode == 200) {
+    // UTF-8로 디코딩
+    var decodedResponse = utf8.decode(response.bodyBytes);
+    List<dynamic> jsonData = jsonDecode(decodedResponse);
+    //logger.d(jsonData); // Debug 로그
+    return jsonData.map((json) => Coffee.fromJson(json)).toList();
+  } else {
+    //logger.e('Failed to load coffee data for $brandName'); // Error 로그
+    throw Exception('Failed to load coffee data for $brandName');
+  }
 }

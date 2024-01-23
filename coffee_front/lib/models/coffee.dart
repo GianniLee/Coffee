@@ -28,16 +28,18 @@ class Coffee {
 
   // JSON 데이터를 받아 Coffee 객체를 생성하는 팩토리 생성자
   factory Coffee.fromJson(Map<String, dynamic> json) {
+    int coffeeIndex = json['coffeeIndex'] ?? 0;
+    String imageUrl = 'http://172.10.7.70:80/$coffeeIndex.jpg'; // 이미지 URL 생성
+
     return Coffee(
-      coffeeIndex: json['coffeeIndex'],
-      imageUrl: json['imageUrl'] ??
-          'lib/sample/MegaCoffee_1.jpg', // 이미지 URL이 없는 경우 기본값 설정
-      brandName: json['brandName'],
-      menuName: json['menuName'],
-      isHot: json['isHot'],
-      tall: json['tall'],
-      grande: json['grande'],
-      venti: json['venti'],
+      coffeeIndex: coffeeIndex,
+      imageUrl: imageUrl, // 생성된 이미지 URL 사용
+      brandName: json['brandName'] ?? '',
+      menuName: json['coffeeName'] ?? '',
+      isHot: json['isHot'] ?? 0,
+      tall: json['tall'] ?? 0,
+      grande: json['grande'] ?? 0,
+      venti: json['venti'] ?? 0,
     );
   }
 }
