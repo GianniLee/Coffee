@@ -29,6 +29,9 @@ public class DrinkedCoffee {
     @Column(name = "time")
     private String time;
 
+    @Column(name = "size")
+    private int size;
+
     // 생략된 생성자, getter, setter
 
 
