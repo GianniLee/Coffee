@@ -58,5 +58,9 @@ public class CoffeeService {
             coffeeRepository.save(coffee);
         }
     }
+    @Transactional(readOnly = true)
+    public Coffee getCoffeeByIndex(int coffeeIndex) {
+        return coffeeRepository.findById(coffeeIndex).orElse(null);
+    }
 }
 
