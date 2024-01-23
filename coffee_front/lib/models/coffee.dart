@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../service/coffee_service.dart';
 
 class Coffee {
   final int coffeeIndex;
-  final String imageUrl; //이건 따로 받아와야함
+  String imageUrl; //이건 따로 받아와야함
   final String brandName;
   final String menuName;
   //final int caffeineAmount;
@@ -28,16 +29,16 @@ class Coffee {
 
   // JSON 데이터를 받아 Coffee 객체를 생성하는 팩토리 생성자
   factory Coffee.fromJson(Map<String, dynamic> json) {
+    int index = json['coffeeIndex'] ?? 0;
     return Coffee(
-      coffeeIndex: json['coffeeIndex'],
-      imageUrl: json['imageUrl'] ??
-          'lib/sample/MegaCoffee_1.jpg', // 이미지 URL이 없는 경우 기본값 설정
-      brandName: json['brandName'],
-      menuName: json['menuName'],
-      isHot: json['isHot'],
-      tall: json['tall'],
-      grande: json['grande'],
-      venti: json['venti'],
+      coffeeIndex: index,
+      imageUrl: getCoffeeImage(index),
+      brandName: json['brandName'] ?? '',
+      menuName: json['coffeeName'] ?? '',
+      isHot: json['isHot'] ?? 0,
+      tall: json['tall'] ?? 0,
+      grande: json['grande'] ?? 0,
+      venti: json['venti'] ?? 0,
     );
   }
 }
