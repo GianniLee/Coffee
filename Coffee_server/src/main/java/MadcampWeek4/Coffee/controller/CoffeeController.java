@@ -8,12 +8,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/coffee")
 public class CoffeeController {
+
+    private final Logger logger = LoggerFactory.getLogger(CoffeeController.class);
 
     @Autowired
     private CoffeeService coffeeService;
@@ -52,10 +59,14 @@ public class CoffeeController {
 
     @GetMapping("/by-brand/{brand}")
     public ResponseEntity<List<Coffee>> getCoffeeByBrand(@PathVariable("brand") String brand) {
+        logger.info("Received request for coffee by brand: {}", brand);
         List<Coffee> coffees = coffeeService.getCoffeeByBrand(brand);
+
         if (!coffees.isEmpty()) {
+            logger.info("Found {} coffees for brand {}", coffees.size(), brand);
             return ResponseEntity.ok(coffees);
         } else {
+            logger.warn("No coffees found for brand {}", brand);
             return ResponseEntity.notFound().build();
         }
     }

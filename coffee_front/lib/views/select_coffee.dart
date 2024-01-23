@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../const/color.dart';
+import '../service/coffee_service.dart';
 
 class CoffeeTab {
   String title;
@@ -44,6 +45,11 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
       icon: Icons.access_time,
       coffeeData: ['recent 커피 데이터 1', 'recent 커피 데이터 2', 'recent 커피 데이터 3'],
     ),
+    CoffeeTab(
+      title: 'Starbucks',
+      icon: Icons.store,
+      coffeeData: [], // 초기 데이터는 비어있음
+    ),
     // 더 많은 커피 브랜드 탭을 여기에 추가할 수 있습니다.
   ];
 
@@ -51,6 +57,11 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
     setState(() {
       selectedTabIndex = tabIndex;
       selectedCoffeeData = coffeeTabs[tabIndex].coffeeData;
+
+      // Starbucks 탭 선택 시 데이터 로드
+      if (tabIndex == 2) {
+        _fetchCoffeeData(coffeeTabs[tabIndex].title);
+      }
     });
   }
 
@@ -110,5 +121,19 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
         ],
       ),
     );
+  }
+
+  // _fetchCoffeeData 메소드 수정
+  Future<void> _fetchCoffeeData(String brandName) async {
+    try {
+      var coffeeData = await fetchCoffeeDataByBrand(brandName);
+      setState(() {
+        // 필요한 경우 다른 로직 추가
+        coffeeTabs[2].coffeeData =
+            coffeeData.map((coffee) => coffee.menuName).toList();
+      });
+    } catch (e) {
+      // 에러 처리
+    }
   }
 }
