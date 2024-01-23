@@ -49,7 +49,7 @@ public class CoffeeService {
         for (Object[] coffeeData : coffeeDataList) {
             Coffee coffee = new Coffee();
             coffee.setBrand((String) coffeeData[1]);
-            coffee.setCoffee_name((String) coffeeData[2]);
+            coffee.setCoffeeName((String) coffeeData[2]);
             coffee.setHot((int) coffeeData[3]);
             coffee.setTall((int) coffeeData[4]);
             coffee.setGrande((int) coffeeData[5]);
@@ -61,6 +61,18 @@ public class CoffeeService {
     @Transactional(readOnly = true)
     public Coffee getCoffeeByIndex(int coffeeIndex) {
         return coffeeRepository.findById(coffeeIndex).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Coffee hotToCold(int coffeeIndex) {
+        Coffee hotCoffee = coffeeRepository.findById(coffeeIndex).orElse(null);
+
+        if (hotCoffee != null) {
+            String coldCoffeeName = "아이스 " + hotCoffee.getCoffeeName();
+            return coffeeRepository.findByCoffeeName(coldCoffeeName).orElse(null);
+        }
+
+        return null;
     }
 }
 

@@ -25,4 +25,15 @@ public class CoffeeController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/hot-to-cold/{coffeeIndex}")
+    public ResponseEntity<Coffee> hotToCold(@PathVariable int coffeeIndex) {
+        Coffee coldCoffee = coffeeService.hotToCold(coffeeIndex);
+
+        if (coldCoffee != null) {
+            return ResponseEntity.ok(coldCoffee);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
