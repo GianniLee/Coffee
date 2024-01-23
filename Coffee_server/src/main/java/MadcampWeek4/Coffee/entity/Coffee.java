@@ -21,7 +21,7 @@ public class Coffee {
     private String brand;
 
     @Column(name = "coffee_name")
-    private String coffee_name;
+    private String coffeeName;
 
     @Column(name = "hot")
 
@@ -41,7 +41,7 @@ public class Coffee {
 
     public Coffee(String brand, String coffee_name, int hot, int tall, int grande, int venti) {
         this.brand = brand;
-        this.coffee_name = coffee_name;
+        this.coffeeName = coffee_name;
         this.hot = hot;
         this.tall = tall;
         this.grande = grande;
@@ -53,7 +53,7 @@ public class Coffee {
         return "Coffee{" +
                 "coffeeIndex=" + coffeeIndex +
                 ", brand='" + brand + '\'' +
-                ", coffee_name='" + coffee_name + '\'' +
+                ", coffee_name='" + coffeeName + '\'' +
                 ", hot=" + hot +
                 ", tall=" + tall +
                 ", grande=" + grande +
