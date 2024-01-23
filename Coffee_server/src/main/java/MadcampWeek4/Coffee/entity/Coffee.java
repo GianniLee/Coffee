@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
-
 @Getter
 @Setter
 @Entity
@@ -24,20 +23,48 @@ public class Coffee {
     @Column(name = "coffee_name")
     private String coffee_name;
 
-    @Column(name = "size")
-    private int size;
-
     @Column(name = "hot")
-    private boolean hot;
 
-    @Column(name = "caffeine")
-    private int caffeine;
+    private int hot;
 
-    @Column(name = "liked")
-    private boolean liked;
+    @Column(name = "tall")
+    private int tall;
+
+    @Column(name = "grande")
+    private int grande;
+
+    @Column(name = "venti")
+    private int venti;
+
+    public Coffee() {
+    }
+
+    public Coffee(String brand, String coffee_name, int hot, int tall, int grande, int venti) {
+        this.brand = brand;
+        this.coffee_name = coffee_name;
+        this.hot = hot;
+        this.tall = tall;
+        this.grande = grande;
+        this.venti = venti;
+    }
+
+    @Override
+    public String toString() {
+        return "Coffee{" +
+                "coffeeIndex=" + coffeeIndex +
+                ", brand='" + brand + '\'' +
+                ", coffee_name='" + coffee_name + '\'' +
+                ", hot=" + hot +
+                ", tall=" + tall +
+                ", grande=" + grande +
+                ", venti=" + venti +
+                '}';
+    }
 
     // 생략된 생성자, getter, setter
 }
+
+
 //@Entity
 //public class Coffee {
 //

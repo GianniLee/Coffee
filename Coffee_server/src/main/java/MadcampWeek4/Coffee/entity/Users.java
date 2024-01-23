@@ -3,6 +3,9 @@ package MadcampWeek4.Coffee.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -23,8 +26,10 @@ public class Users {
     @Column(name = "half_life")
     private int halfLife;
 
-    @Column(name = "threshold")
-    private int threshold;
+    @ElementCollection
+    @CollectionTable(name = "liked_coffee", joinColumns = @JoinColumn(name = "user_index"))
+    @Column(name = "coffee_index")
+    private List<Integer> coffeeIndexes;
 
     // 생략된 생성자, getter, setter
 }

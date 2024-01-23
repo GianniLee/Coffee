@@ -1,0 +1,37 @@
+package MadcampWeek4.Coffee.controller;
+
+import MadcampWeek4.Coffee.data.DrinkedCoffeeDTO;
+import MadcampWeek4.Coffee.entity.DrinkedCoffee;
+import MadcampWeek4.Coffee.service.DrinkedCoffeeService;
+import MadcampWeek4.Coffee.utils.DTOConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/drinked-coffees")
+public class DrinkedCoffeeController {
+
+    @Autowired
+    private DrinkedCoffeeService drinkedCoffeeService;
+
+//    @GetMapping("/by-user/{userIndex}")
+//    public ResponseEntity<List<DrinkedCoffeeDTO>> getDrinkedCoffeeByUserIndex(@PathVariable("userIndex") int userIndex) {
+//        List<DrinkedCoffeeDTO> drinkedCoffeeDtos = drinkedCoffeeService.getDrinkedCoffeeByUserIndex(userIndex)
+//                .stream()
+//                .map(DTOConverter::convertToDto)
+//                .collect(Collectors.toList());
+//
+//        return ResponseEntity.ok(drinkedCoffeeDtos);
+//    }
+@GetMapping("/by-user/{userIndex}")
+public ResponseEntity<List<DrinkedCoffee>> getDrinkedCoffeeByUserIndex(@PathVariable("userIndex") int userIndex) {
+    List<DrinkedCoffee> drinkedCoffees = drinkedCoffeeService.getDrinkedCoffeeByUserIndex(userIndex);
+
+    return ResponseEntity.ok(drinkedCoffees);
+}
+
+}
