@@ -159,7 +159,17 @@ class CaffeineGraphPainter extends CustomPainter {
     for (var record in coffeeRecords) {
       // CoffeeRecord의 date와 time을 결합하여 DateTime을 생성
       DateTime intakeTime = DateTime.parse('${record.date}T${record.time}');
-      int amount = record.coffee.caffeineAmount; // Coffee 객체의 caffeineAmount 사용
+      //int amount = record.coffee.caffeineAmount; // Coffee 객체의 caffeineAmount 사용
+
+      int amount = 0;
+      if (record.size == 0) {
+        amount = record.coffee.tall;
+      } else if (record.size == 1) {
+        amount = record.coffee.grande;
+      } else {
+        amount = record.coffee.venti;
+      }
+
       final t = time.difference(intakeTime).inMinutes.toDouble();
 
       if (t >= 0) {

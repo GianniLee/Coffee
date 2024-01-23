@@ -89,6 +89,15 @@ class _currentCaffeineView extends State<currentCaffeineView> {
         final record = coffeeRecords[index];
         DateTime intakeTime = DateTime.parse('${record.date}T${record.time}');
 
+        int caffeineAmount = 0;
+        if (record.size == 0) {
+          caffeineAmount = record.coffee.tall;
+        } else if (record.size == 1) {
+          caffeineAmount = record.coffee.grande;
+        } else {
+          caffeineAmount = record.coffee.venti;
+        }
+
         return ListTile(
           leading: Container(
             width: 50, // 이미지의 너비를 제한합니다.
@@ -100,7 +109,7 @@ class _currentCaffeineView extends State<currentCaffeineView> {
             mainAxisSize: MainAxisSize.min, // 컬럼의 크기를 자식들의 크기에 맞게 조절합니다.
             children: <Widget>[
               Text(record.coffee.menuName), // 커피 이름
-              Text('${record.coffee.caffeineAmount}mg'), // 카페인 양
+              Text('${caffeineAmount}mg'), // 카페인 양
             ],
           ),
           trailing: Text(_getTimeAgo(intakeTime)), // 지난 시간
@@ -117,54 +126,52 @@ class _currentCaffeineView extends State<currentCaffeineView> {
       imageUrl: 'lib/sample/starbucks.jpg',
       brandName: 'Brand A',
       menuName: 'Espresso',
-      caffeineAmount: 100,
       isHot: 1,
-      size: 1,
+      tall: 75,
+      grande: 150,
+      venti: 300,
     );
     final coffee2 = Coffee(
       coffeeIndex: 2,
       imageUrl: 'lib/sample/MegaCoffee.jpg',
       brandName: 'Brand B',
       menuName: 'Latte',
-      caffeineAmount: 150,
       isHot: 0,
-      size: 2,
+      tall: 75,
+      grande: 150,
+      venti: 300,
     );
     final coffee3 = Coffee(
       coffeeIndex: 3,
       imageUrl: 'lib/sample/starbucks.jpg',
       brandName: 'Brand C',
       menuName: 'Cappuccino',
-      caffeineAmount: 80,
       isHot: 1,
-      size: 1,
+      tall: 100,
+      grande: 200,
+      venti: 250,
     );
 
     // 더미 커피 레코드 데이터
     final record1 = CoffeeRecord(
       date: '20240123',
       time: '06:00',
+      size: 0,
       coffee: coffee1,
     );
     final record2 = CoffeeRecord(
       date: '20240123',
       time: '09:00',
+      size: 1,
       coffee: coffee2,
     );
     final record3 = CoffeeRecord(
       date: '20240123',
       time: '12:40',
+      size: 2,
       coffee: coffee3,
     );
 
     return [record1, record2, record3];
   }
-
-  // TODO: 1) 서버에 현재 UserID 를 보내고, 12시간 이내로 섭취한 모든 coffee_record list를 요청하는 함수 선언
-
-  // TODO: 2) 받아온 coffee_record list를 /models/Coffee의 형식으로 전환, 역시 list로 만듦
-
-  // TODO: 3) 만든 Coffee list를 caffeine_graph_painter에 제공, 그래프 작성
-
-  // TODO: 4) 만든 Coffee list를 최근순으로 정렬해서 리스트로 보여줌.
 }
