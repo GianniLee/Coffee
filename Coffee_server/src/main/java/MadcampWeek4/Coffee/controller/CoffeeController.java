@@ -29,7 +29,7 @@ public class CoffeeController {
     }
 
     @GetMapping("/hot-to-cold/{coffeeIndex}")
-    public ResponseEntity<Coffee> hotToCold(@PathVariable int coffeeIndex) {
+    public ResponseEntity<Coffee> hotToCold(@PathVariable("coffeeIndex") int coffeeIndex) {
         Coffee coldCoffee = coffeeService.hotToCold(coffeeIndex);
 
         if (coldCoffee != null) {
