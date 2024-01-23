@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/coffee")
 public class CoffeeController {
@@ -32,6 +34,16 @@ public class CoffeeController {
 
         if (coldCoffee != null) {
             return ResponseEntity.ok(coldCoffee);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/by-brand/{brand}")
+    public ResponseEntity<List<Coffee>> getCoffeeByBrand(@PathVariable("brand") String brand) {
+        List<Coffee> coffees = coffeeService.getCoffeeByBrand(brand);
+        if (!coffees.isEmpty()) {
+            return ResponseEntity.ok(coffees);
         } else {
             return ResponseEntity.notFound().build();
         }
