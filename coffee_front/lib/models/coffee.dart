@@ -1,4 +1,5 @@
-class SelectedCoffee {
+class Coffee {
+  final int coffeeIndex;
   final String imageUrl;
   final String brandName;
   final String menuName;
@@ -7,7 +8,8 @@ class SelectedCoffee {
   final int size;
   bool liked = false;
 
-  SelectedCoffee({
+  Coffee({
+    required this.coffeeIndex,
     required this.imageUrl,
     required this.brandName,
     required this.menuName,

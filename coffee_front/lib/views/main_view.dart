@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../const/margins.dart'; // 마진 상수 파일 import
-import '../models/selected_coffee.dart'; // SelectedCoffee 모델 import
+import '../models/coffee.dart'; // SelectedCoffee 모델 import
 import '../const/color.dart';
 import 'select_coffee.dart';
 
@@ -16,7 +16,7 @@ class _MainViewState extends State<MainView> {
   ValueNotifier<String> _brandNameNotifier =
       ValueNotifier("------"); // 초기 값으로 "Starbucks" 설정
 
-  List<SelectedCoffee> coffeeList = [];
+  List<Coffee> coffeeList = [];
   int _temperatureOption = 0;
   int _sizeOption = 0;
   int _caffeineOption = 0;
@@ -41,7 +41,7 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     // 더미 데이터 리스트 생성
-    List<SelectedCoffee> coffeeList =
+    List<Coffee> coffeeList =
         createDummySelectedCoffeeList(); // TODO: 여기 사용자가 좋아요한 메뉴 + 최근메뉴 불러오는걸로 변경하셈
 
     return Scaffold(
@@ -123,8 +123,7 @@ class _MainViewState extends State<MainView> {
 
   // 커피 카드 리스트 뷰 생성 함수: SelectedCoffee 객체의 리스트를 페이지 뷰로 표시
   // 리스트뷰가 바뀔때마다 현재 페이지의 다른 위젯들에 들어가는 데이터를 업데이트
-  Widget _buildCoffeeCards(
-      BuildContext context, List<SelectedCoffee> coffeeList) {
+  Widget _buildCoffeeCards(BuildContext context, List<Coffee> coffeeList) {
     return SizedBox(
       height: 300,
       child: PageView.builder(
@@ -149,7 +148,7 @@ class _MainViewState extends State<MainView> {
 
   // 각 SelectedCoffee 객체에 대한 카드 생성 함수: 커피 이미지 및 메뉴 이름 등을 표시
   Widget _buildSelectedCoffee(
-      BuildContext context, double cardWidth, SelectedCoffee coffee) {
+      BuildContext context, double cardWidth, Coffee coffee) {
     return Container(
       margin:
           const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 전체 카드 여백
@@ -216,10 +215,11 @@ class _MainViewState extends State<MainView> {
   }
 
   // 더미 데이터로 SelectedCoffee 객체 리스트 생성 함수: 테스트 목적으로 사용
-  List<SelectedCoffee> createDummySelectedCoffeeList() {
-    List<SelectedCoffee> coffeeList = [];
+  List<Coffee> createDummySelectedCoffeeList() {
+    List<Coffee> coffeeList = [];
 
     coffeeList.add(createSelectedCoffee({
+      'coffeeIndex': 1,
       'imageUrl': 'lib/sample/MegaCoffee.jpg',
       'brandName': '메가커피',
       'menuName': '라떼',
@@ -229,6 +229,7 @@ class _MainViewState extends State<MainView> {
     }));
 
     coffeeList.add(createSelectedCoffee({
+      'coffeeIndex': 2,
       'imageUrl': 'lib/sample/starbucks.jpg',
       'brandName': '스타벅스',
       'menuName': '아이스 아메리카노',
@@ -238,6 +239,7 @@ class _MainViewState extends State<MainView> {
     }));
 
     coffeeList.add(createSelectedCoffee({
+      'coffeeIndex': 3,
       'imageUrl': 'lib/sample/MegaCoffee.jpg',
       'brandName': '메가커피',
       'menuName': '라떼',
@@ -247,6 +249,7 @@ class _MainViewState extends State<MainView> {
     }));
 
     coffeeList.add(createSelectedCoffee({
+      'coffeeIndex': 4,
       'imageUrl': 'lib/sample/MegaCoffee_1.jpg',
       'brandName': '메가커피',
       'menuName': '커피 프라페',
@@ -259,8 +262,9 @@ class _MainViewState extends State<MainView> {
   }
 
   // 데이터로부터 SelectedCoffee 객체 생성
-  SelectedCoffee createSelectedCoffee(Map<String, dynamic> data) {
-    return SelectedCoffee(
+  Coffee createSelectedCoffee(Map<String, dynamic> data) {
+    return Coffee(
+      coffeeIndex: data['coffeeIndex'],
       imageUrl: data['imageUrl'],
       brandName: data['brandName'],
       menuName: data['menuName'],

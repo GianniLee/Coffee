@@ -1,36 +1,23 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import '../models/coffee.dart';
+import '../models/coffee_record.dart';
 
-// 카페인 섭취 기록을 나타내는 모델 클래스입니다.
-class CaffeineIntake {
-  final DateTime time; // 섭취 시간
-  final double amount; // 섭취량
+// // 카페인 섭취 기록을 나타내는 모델 클래스입니다.
+// class CaffeineIntake {
+//   final DateTime time; // 섭취 시간
+//   final double amount; // 섭취량
 
-  CaffeineIntake({required this.time, required this.amount});
-}
-
-// 더미 데이터 생성 함수
-List<CaffeineIntake> createDummyData() {
-  final currentTime = DateTime.now();
-
-  final sixHoursAgo = currentTime.subtract(Duration(hours: 6));
-  final threeHoursAgo = currentTime.subtract(Duration(hours: 3));
-  final thirtyMinutesAgo = currentTime.subtract(Duration(minutes: 30));
-
-  return [
-    CaffeineIntake(time: sixHoursAgo, amount: 100),
-    CaffeineIntake(time: threeHoursAgo, amount: 500),
-    CaffeineIntake(time: thirtyMinutesAgo, amount: 50),
-  ];
-}
+//   CaffeineIntake({required this.time, required this.amount});
+// }
 
 class CaffeineGraphPainter extends CustomPainter {
   final double decayConstant;
-  final List<CaffeineIntake> intakeRecords;
+  final List<CoffeeRecord> coffeeRecords; // CoffeeRecord 리스트로 변경
 
   CaffeineGraphPainter({
     required this.decayConstant,
-    required this.intakeRecords,
+    required this.coffeeRecords, // CoffeeRecord 리스트를 받음
   });
 
   @override
@@ -121,27 +108,38 @@ class CaffeineGraphPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: textSpan,
       textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center, // 텍스트를 가운데 정렬합니다.
     );
     textPainter.layout(minWidth: 0, maxWidth: double.infinity);
-    final textOffset = Offset(point.dx - 10, point.dy - 20); // 텍스트 위치 조정
+    // 텍스트 위치를 조정하여 점 위 중앙에 오도록 설정합니다.
+    final textOffset =
+        Offset(point.dx - (textPainter.width / 2), point.dy - radius - 20);
     textPainter.paint(canvas, textOffset);
   }
 
-  // 피크 값에 검은 점 찍기 메소드 (수정됨)
+  // 피크 값에 검은 점 찍기 메소드
   void _drawPeakPoints(Canvas canvas, Size size) {
     final startTime = DateTime.now().subtract(Duration(hours: 6));
+    final endTime = DateTime.now();
     final totalDuration =
         DateTime.now().add(Duration(hours: 6)).difference(startTime).inMinutes;
 
-    for (var record in intakeRecords) {
-      final peakTime = record.time.add(Duration(minutes: 15));
+    for (var record in coffeeRecords) {
+      // CoffeeRecord의 date와 time을 결합하여 DateTime을 생성
+      DateTime intakeTime = DateTime.parse('${record.date}T${record.time}');
+      // 피크 시간은 섭취 후 15분으로 가정
+      DateTime peakTime = intakeTime.add(Duration(minutes: 15));
       final peakConcentration = _caffeineConcentrationAtTime(peakTime);
-      final peakX = (peakTime.difference(startTime).inMinutes / totalDuration) *
-          size.width;
-      final peakY = size.height -
-          (peakConcentration / _maxCaffeineConcentration()) * size.height;
-      _drawPointWithLabel(canvas, Offset(peakX, peakY), Colors.black, 2.5,
-          '${peakConcentration.floor()} mg');
+      if (peakTime.isAfter(startTime) && peakTime.isBefore(endTime)) {
+        final minutesSinceStart = peakTime.difference(startTime).inMinutes;
+        final peakX = (minutesSinceStart / totalDuration) * size.width;
+        final peakY = size.height -
+            (peakConcentration / _maxCaffeineConcentration()) * size.height;
+
+        // 점과 레이블을 그립니다.
+        _drawPointWithLabel(canvas, Offset(peakX, peakY), Colors.black, 2.5,
+            '${peakConcentration.floor()} mg');
+      }
     }
   }
 
@@ -158,9 +156,10 @@ class CaffeineGraphPainter extends CustomPainter {
   // 카페인 농도를 계산하는 함수
   double _caffeineConcentrationAtTime(DateTime time) {
     double totalConcentration = 0.0;
-    for (var record in intakeRecords) {
-      final intakeTime = record.time;
-      final amount = record.amount;
+    for (var record in coffeeRecords) {
+      // CoffeeRecord의 date와 time을 결합하여 DateTime을 생성
+      DateTime intakeTime = DateTime.parse('${record.date}T${record.time}');
+      int amount = record.coffee.caffeineAmount; // Coffee 객체의 caffeineAmount 사용
       final t = time.difference(intakeTime).inMinutes.toDouble();
 
       if (t >= 0) {
