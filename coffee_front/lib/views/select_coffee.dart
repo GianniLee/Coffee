@@ -170,7 +170,7 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
           ),
         ],
       ),
-      floatingActionButton:
+      bottomSheet:
           selectedCoffee != null ? _buildFloatingSelectedCoffeeCard() : null,
     );
   }
@@ -211,33 +211,27 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
   }
 
   Widget _buildFloatingSelectedCoffeeCard() {
-    return Positioned(
-      bottom: 16.0,
-      left: 16.0,
-      right: 16.0,
-      child: Card(
-        color: MyColor.black,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.close, color: MyColor.white),
-                onPressed: () => setState(() {
-                  selectedCoffee = null;
-                  selectedCoffeeIndex = null;
-                }),
-              ),
-              Image.network(selectedCoffee!.imageUrl, width: 56, height: 56),
-              Text(
-                selectedCoffee!.menuName,
-                style: TextStyle(color: MyColor.white),
-              ),
-              // 여기에 다른 버튼을 추가할 수 있습니다.
-              // 예를 들어, IconButton을 추가하고 onPressed에 나중에 구현할 기능을 연결할 수 있습니다.
-            ],
-          ),
+    return Card(
+      color: MyColor.black,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: Icon(Icons.close, color: MyColor.white),
+              onPressed: () => setState(() {
+                selectedCoffee = null;
+                selectedCoffeeIndex = null;
+              }),
+            ),
+            Image.network(selectedCoffee!.imageUrl, width: 56, height: 56),
+            Text(
+              selectedCoffee!.menuName,
+              style: TextStyle(color: MyColor.white),
+            ),
+            // 추가 버튼 구현
+          ],
         ),
       ),
     );
