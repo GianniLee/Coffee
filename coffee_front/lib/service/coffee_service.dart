@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 var logger = Logger();
 
 String getCoffeeImage(int coffeeIndex) {
-  return 'http://172.10.7.70:80/$coffeeIndex.jpg';
+  return 'http://172.10.7.69:80/$coffeeIndex.jpg';
 }
 
 Future<List<Coffee>> fetchCoffeeDataByBrand(String brandName) async {

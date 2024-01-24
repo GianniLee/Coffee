@@ -21,6 +21,12 @@ public class DrinkedCoffeeController {
     @Autowired
     private DrinkedCoffeeService drinkedCoffeeService;
 
+    @PostMapping
+    public ResponseEntity<DrinkedCoffee> createDrinkedCoffee(@RequestBody DrinkedCoffee drinkedCoffee) {
+        DrinkedCoffee createdDrinkedCoffee = drinkedCoffeeService.createAndSaveDrinkedCoffee(drinkedCoffee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDrinkedCoffee);
+    }
+
     @GetMapping("/by-user/{userIndex}")
     public ResponseEntity<List<DrinkedCoffeeDTO>> getDrinkedCoffeeByUserIndex(@PathVariable("userIndex") int userIndex) {
         List<DrinkedCoffeeDTO> drinkedCoffeeDtos = drinkedCoffeeService.getDrinkedCoffeeByUserIndex(userIndex)
