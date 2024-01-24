@@ -118,15 +118,35 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
 
   Widget _buildTabItem(CoffeeTab tab, int index) {
     bool isSelected = index == selectedTabIndex;
+    Widget leadingIcon;
+
+    // 로고를 사용해야 하는 탭인 경우 로고 이미지 위젯 사용
+    if (tab.title == 'Starbucks') {
+      leadingIcon = _buildLogoIcon('assets/icons/icon_Starbucks.png');
+    } else if (tab.title == 'Angelinus') {
+      leadingIcon = _buildLogoIcon('assets/icons/icon_Angelinus.webp');
+    } else {
+      // 그 외의 경우 기존 아이콘 사용
+      leadingIcon =
+          Icon(tab.icon, color: isSelected ? Colors.white : Colors.black);
+    }
+
     return Container(
       color: isSelected ? Colors.black : Colors.transparent,
       child: ListTile(
-        leading: Icon(
-          tab.icon,
-          color: isSelected ? Colors.white : Colors.black,
-        ),
+        leading: leadingIcon,
         onTap: () => _updateSelectedCoffeeData(index),
         selected: isSelected,
+      ),
+    );
+  }
+
+  Widget _buildLogoIcon(String imagePath) {
+    return SizedBox(
+      width: 24, // 적절한 너비 설정
+      height: 24, // 적절한 높이 설정
+      child: ClipOval(
+        child: Image.asset(imagePath, fit: BoxFit.cover),
       ),
     );
   }
