@@ -1,4 +1,4 @@
-package MadcampWeek4.Coffee.repository;
+npackage MadcampWeek4.Coffee.repository;
 
 import MadcampWeek4.Coffee.entity.DrinkedCoffee;
 import MadcampWeek4.Coffee.entity.Users;

@@ -28,6 +28,9 @@ public class DrinkedCoffeeService {
     @Autowired
     private CoffeeRepository coffeeRepository;
 
+    @Autowired
+    private CalendarRepository calendarRepository;
+
     @Transactional
     public void createDummyDrinkedCoffee() {
         Users user1 = usersRepository.findById(1).orElse(null);
@@ -100,6 +103,18 @@ public class DrinkedCoffeeService {
 //
 //        return List.of(); // 사용자가 없으면 빈 목록 반환
 //    }
+    @Transactional
+    public DrinkedCoffee createAndSaveDrinkedCoffee(DrinkedCoffee drinkedCoffee) {
+        DrinkedCoffee savedDrinkedCoffee = drinkedCoffeeRepository.save(drinkedCoffee);
+
+        // DrinkedCoffee 생성 시 Calendar도 생성
+        Calendar newCalendar = new Calendar();
+        newCalendar.setDrinkedCoffee(savedDrinkedCoffee);
+        newCalendar.setMemo(""); // 초기 메모는 비어있음
+        calendarRepository.save(newCalendar);
+
+        return savedDrinkedCoffee;
+    }
 
 
 
