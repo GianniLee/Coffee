@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 var logger = Logger();
-const String apiUrl = "http://172.10.7.69:80";
+const String apiUrl = "http://172.10.5.174:80";
 
 Future<int> getHalfLife(int userIndex) async {
   var url = Uri.parse('$apiUrl/users/${userIndex}/half-life');
@@ -20,8 +20,10 @@ Future<int> getHalfLife(int userIndex) async {
 }
 
 Future<int> updateHalfLife(int userIndex, int newHalfLife) async {
-  print('updateHalfLife called with userIndex: $userIndex, newHalfLife: $newHalfLife');
-  var url = Uri.parse('$apiUrl/users/${userIndex}/update-half-life/${newHalfLife}');
+  print(
+      'updateHalfLife called with userIndex: $userIndex, newHalfLife: $newHalfLife');
+  var url =
+      Uri.parse('$apiUrl/users/${userIndex}/update-half-life/${newHalfLife}');
   // HTTP 요청 전 로그
 
   final response = await http.put(url);
