@@ -25,7 +25,7 @@ public class CalendarController {
     }
 
     @GetMapping("/by-drinked-coffee/{drinkedCoffeeIndex}")
-    public ResponseEntity<Calendar> getCalendarByDrinkedCoffeeIndex(@PathVariable int drinkedCoffeeIndex) {
+    public ResponseEntity<Calendar> getCalendarByDrinkedCoffeeIndex(@PathVariable("drinkedCoffeeIndex") int drinkedCoffeeIndex) {
         List<Calendar> calendars = calendarService.findByDrinkedCoffeeIndex(drinkedCoffeeIndex);
         if (calendars.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -54,19 +54,19 @@ public class CalendarController {
 
     // 여기에 필요한 추가적인 엔드포인트를 구현할 수 있습니다.
     @PutMapping("/{id}")
-    public ResponseEntity<Calendar> updateMemo(@PathVariable int id, @RequestBody String memo) {
+    public ResponseEntity<Calendar> updateMemo(@PathVariable("id") int id, @RequestBody String memo) {
         Calendar updatedCalendar = calendarService.updateMemo(id, memo);
         return ResponseEntity.ok(updatedCalendar);
     }
 
     @PatchMapping("/clear-memo/{id}")
-    public ResponseEntity<Void> clearMemo(@PathVariable int id) {
+    public ResponseEntity<Void> clearMemo(@PathVariable("id") int id) {
         Calendar updatedCalendar = calendarService.clearMemo(id);
         return ResponseEntity.ok(updatedCalendar);
     }
 
     @GetMapping("/is-memo-empty/{id}")
-    public ResponseEntity<Boolean> isMemoEmpty(@PathVariable int id) {
+    public ResponseEntity<Boolean> isMemoEmpty(@PathVariable("id") int id) {
         boolean isMemoEmpty = calendarService.isMemoEmpty(id);
         return ResponseEntity.ok(isMemoEmpty);
     }
