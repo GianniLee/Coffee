@@ -46,7 +46,7 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
         // 예시 데이터
         Coffee(
             coffeeIndex: 1,
-            imageUrl: 'http://172.10.7.70:80/0.jpg',
+            imageUrl: getCoffeeImage(0),
             brandName: 'Liked',
             menuName: 'liked 커피 데이터 1',
             isHot: 1,
@@ -55,7 +55,7 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
             venti: 300),
         Coffee(
             coffeeIndex: 2,
-            imageUrl: 'http://172.10.7.70:80/0.jpg',
+            imageUrl: getCoffeeImage(0),
             brandName: 'Liked',
             menuName: 'liked 커피 데이터 2',
             isHot: 1,
@@ -71,7 +71,7 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
         // 예시 데이터
         Coffee(
             coffeeIndex: 3,
-            imageUrl: 'http://172.10.7.70:80/0.jpg',
+            imageUrl: getCoffeeImage(0),
             brandName: 'Recent',
             menuName: 'recent 커피 데이터 1',
             isHot: 1,
@@ -250,10 +250,98 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
               selectedCoffee!.menuName,
               style: TextStyle(color: MyColor.white),
             ),
-            // 추가 버튼 구현
+            // '추가' 버튼 구현
+            TextButton(
+              onPressed: () => _showAddDialog(),
+              child: Text('추가', style: TextStyle(color: MyColor.white)),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showAddDialog() {
+    // 초기 상태 설정
+    String selectedSize = 'Grande'; // 기본값으로 'Grande' 설정
+    int caffeineAmount = selectedCoffee?.grande ?? 0; // 'Grande' 카페인 양으로 초기화
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // 다이얼로그 상태를 위한 지역 변수
+        String localSelectedSize = selectedSize;
+        int localCaffeineAmount = caffeineAmount;
+
+        // 다이얼로그 상태 변경을 위한 함수
+        void updateLocalState(String? size) {
+          if (size != null) {
+            localSelectedSize = size;
+            switch (size) {
+              case 'Tall':
+                localCaffeineAmount = selectedCoffee?.tall ?? 0;
+                break;
+              case 'Grande':
+                localCaffeineAmount = selectedCoffee?.grande ?? 0;
+                break;
+              case 'Venti':
+                localCaffeineAmount = selectedCoffee?.venti ?? 0;
+                break;
+            }
+          }
+        }
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text(selectedCoffee!.menuName),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Image.network(selectedCoffee!.imageUrl,
+                        width: 150, height: 150),
+                    SizedBox(height: 16),
+                    Text(
+                      selectedCoffee!.menuName,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    Text('Caffeine: $localCaffeineAmount mg'), // 카페인 양 표시
+                    SizedBox(height: 16),
+                    ...['Tall', 'Grande', 'Venti']
+                        .map((size) => RadioListTile<String>(
+                              title: Text(size),
+                              value: size,
+                              groupValue: localSelectedSize,
+                              onChanged: (value) {
+                                setState(() {
+                                  updateLocalState(value);
+                                });
+                              },
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 0), // 패딩 조절
+                            )),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('취소'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                TextButton(
+                  child: Text('추가'),
+                  onPressed: () {
+                    // TODO: 여기에 추가 작업을 구현하세요.
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

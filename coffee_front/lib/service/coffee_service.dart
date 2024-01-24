@@ -7,11 +7,11 @@ import 'package:logger/logger.dart';
 var logger = Logger();
 
 String getCoffeeImage(int coffeeIndex) {
-  return 'http://172.10.7.69:80/$coffeeIndex.jpg';
+  return 'http://172.10.5.174:80/$coffeeIndex.jpg';
 }
 
 Future<List<Coffee>> fetchCoffeeDataByBrand(String brandName) async {
-  var url = Uri.parse('http://172.10.7.70:80/coffee/by-brand/$brandName');
+  var url = Uri.parse('http://172.10.5.174:80/coffee/by-brand/$brandName');
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
@@ -29,7 +29,7 @@ Future<List<Coffee>> fetchCoffeeDataByBrand(String brandName) async {
 }
 
 Future<List<CoffeeRecord>> fetchDrinkedCoffees(int userId) async {
-  var url = Uri.parse('http://172.10.7.70:80/drinked-coffees/by-user/$userId');
+  var url = Uri.parse('http://172.10.5.174:80/drinked-coffees/by-user/$userId');
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
