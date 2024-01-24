@@ -21,14 +21,17 @@ public class DrinkedCoffeeController {
     @Autowired
     private DrinkedCoffeeService drinkedCoffeeService;
 
-    @PostMapping
-    public ResponseEntity<DrinkedCoffee> createDrinkedCoffee(@RequestBody DrinkedCoffee drinkedCoffee) {
-        DrinkedCoffee createdDrinkedCoffee = drinkedCoffeeService.createAndSaveDrinkedCoffee(drinkedCoffee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdDrinkedCoffee);
-    }
+    // @PostMapping
+    // public ResponseEntity<DrinkedCoffee> createDrinkedCoffee(@RequestBody
+    // DrinkedCoffee drinkedCoffee) {
+    // DrinkedCoffee createdDrinkedCoffee =
+    // drinkedCoffeeService.createAndSaveDrinkedCoffee(drinkedCoffee);
+    // return ResponseEntity.status(HttpStatus.CREATED).body(createdDrinkedCoffee);
+    // }
 
     @GetMapping("/by-user/{userIndex}")
-    public ResponseEntity<List<DrinkedCoffeeDTO>> getDrinkedCoffeeByUserIndex(@PathVariable("userIndex") int userIndex) {
+    public ResponseEntity<List<DrinkedCoffeeDTO>> getDrinkedCoffeeByUserIndex(
+            @PathVariable("userIndex") int userIndex) {
         List<DrinkedCoffeeDTO> drinkedCoffeeDtos = drinkedCoffeeService.getDrinkedCoffeeByUserIndex(userIndex)
                 .stream()
                 .map(DTOConverter::convertToDto) // DrinkedCoffee -> DrinkedCoffeeDTO로 변환
@@ -37,11 +40,13 @@ public class DrinkedCoffeeController {
 
         return ResponseEntity.ok(drinkedCoffeeDtos);
     }
-//    @GetMapping("/by-user/{userIndex}")
-//    public ResponseEntity<List<DrinkedCoffee>> getDrinkedCoffeeByUserIndex(@PathVariable("userIndex") int userIndex) {
-//        List<DrinkedCoffee> drinkedCoffees = drinkedCoffeeService.getDrinkedCoffeeByUserIndex(userIndex);
-//
-//        return ResponseEntity.ok(drinkedCoffees);
-//    }
+    // @GetMapping("/by-user/{userIndex}")
+    // public ResponseEntity<List<DrinkedCoffee>>
+    // getDrinkedCoffeeByUserIndex(@PathVariable("userIndex") int userIndex) {
+    // List<DrinkedCoffee> drinkedCoffees =
+    // drinkedCoffeeService.getDrinkedCoffeeByUserIndex(userIndex);
+    //
+    // return ResponseEntity.ok(drinkedCoffees);
+    // }
 
 }

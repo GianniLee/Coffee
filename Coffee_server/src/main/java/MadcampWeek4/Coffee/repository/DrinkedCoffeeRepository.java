@@ -1,4 +1,4 @@
-npackage MadcampWeek4.Coffee.repository;
+package MadcampWeek4.Coffee.repository;
 
 import MadcampWeek4.Coffee.entity.DrinkedCoffee;
 import MadcampWeek4.Coffee.entity.Users;
@@ -10,4 +10,3 @@ public interface DrinkedCoffeeRepository extends JpaRepository<DrinkedCoffee, In
     // You can add custom query methods if needed
     List<DrinkedCoffee> findByUser(Users user);
 }
-

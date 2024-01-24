@@ -5,6 +5,7 @@ import MadcampWeek4.Coffee.utils.DTOConverter;
 import MadcampWeek4.Coffee.entity.Coffee;
 import MadcampWeek4.Coffee.entity.DrinkedCoffee;
 import MadcampWeek4.Coffee.entity.Users;
+// import MadcampWeek4.Coffee.repository.CalendarRepository;
 import MadcampWeek4.Coffee.repository.CoffeeRepository;
 import MadcampWeek4.Coffee.repository.DrinkedCoffeeRepository;
 import MadcampWeek4.Coffee.repository.UsersRepository;
@@ -28,8 +29,8 @@ public class DrinkedCoffeeService {
     @Autowired
     private CoffeeRepository coffeeRepository;
 
-    @Autowired
-    private CalendarRepository calendarRepository;
+    // @Autowired
+    // private CalendarRepository calendarRepository;
 
     @Transactional
     public void createDummyDrinkedCoffee() {
@@ -68,21 +69,22 @@ public class DrinkedCoffeeService {
         }
     }
 
-//    @Transactional
-//    public List<DrinkedCoffeeDTO> getDrinkedCoffeeByUserIndex(int userIndex) {
-//        Users user = usersRepository.findById(userIndex).orElse(null);
-//
-//        if (user != null) {
-//            List<DrinkedCoffee> drinkedCoffees = drinkedCoffeeRepository.findByUser(user);
-//
-//            // Convert DrinkedCoffee entities to DrinkedCoffeeDto objects
-//            return drinkedCoffees.stream()
-//                    .map(DTOConverter::convertToDto)
-//                    .collect(Collectors.toList());
-//        }
-//
-//        return List.of(); // 사용자가 없으면 빈 목록 반환
-//    }
+    // @Transactional
+    // public List<DrinkedCoffeeDTO> getDrinkedCoffeeByUserIndex(int userIndex) {
+    // Users user = usersRepository.findById(userIndex).orElse(null);
+    //
+    // if (user != null) {
+    // List<DrinkedCoffee> drinkedCoffees =
+    // drinkedCoffeeRepository.findByUser(user);
+    //
+    // // Convert DrinkedCoffee entities to DrinkedCoffeeDto objects
+    // return drinkedCoffees.stream()
+    // .map(DTOConverter::convertToDto)
+    // .collect(Collectors.toList());
+    // }
+    //
+    // return List.of(); // 사용자가 없으면 빈 목록 반환
+    // }
     @Transactional
     public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
         Users user = usersRepository.findById(userIndex).orElse(null);
@@ -93,29 +95,30 @@ public class DrinkedCoffeeService {
 
         return List.of(); // 사용자가 없으면 빈 목록 반환
     }
-//    @Transactional
-//    public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
-//        Users user = usersRepository.findById(userIndex).orElse(null);
-//
-//        if (user != null) {
-//            return drinkedCoffeeRepository.findByUser(user);
-//        }
-//
-//        return List.of(); // 사용자가 없으면 빈 목록 반환
-//    }
-    @Transactional
-    public DrinkedCoffee createAndSaveDrinkedCoffee(DrinkedCoffee drinkedCoffee) {
-        DrinkedCoffee savedDrinkedCoffee = drinkedCoffeeRepository.save(drinkedCoffee);
 
-        // DrinkedCoffee 생성 시 Calendar도 생성
-        Calendar newCalendar = new Calendar();
-        newCalendar.setDrinkedCoffee(savedDrinkedCoffee);
-        newCalendar.setMemo(""); // 초기 메모는 비어있음
-        calendarRepository.save(newCalendar);
+    // @Transactional
+    // public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
+    // Users user = usersRepository.findById(userIndex).orElse(null);
+    //
+    // if (user != null) {
+    // return drinkedCoffeeRepository.findByUser(user);
+    // }
+    //
+    // return List.of(); // 사용자가 없으면 빈 목록 반환
+    // }
+    // @Transactional
+    // public DrinkedCoffee createAndSaveDrinkedCoffee(DrinkedCoffee drinkedCoffee)
+    // {
+    // DrinkedCoffee savedDrinkedCoffee =
+    // drinkedCoffeeRepository.save(drinkedCoffee);
 
-        return savedDrinkedCoffee;
-    }
+    // // DrinkedCoffee 생성 시 Calendar도 생성
+    // Calendar newCalendar = new Calendar();
+    // newCalendar.setDrinkedCoffee(savedDrinkedCoffee);
+    // newCalendar.setMemo(""); // 초기 메모는 비어있음
+    // calendarRepository.save(newCalendar);
 
-
+    // return savedDrinkedCoffee;
+    // }
 
 }
