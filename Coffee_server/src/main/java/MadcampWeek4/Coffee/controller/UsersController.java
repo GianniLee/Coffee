@@ -20,6 +20,12 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
+    @PostMapping("/create/{id}/{pwd}")
+    public ResponseEntity<Users> createUser(@PathVariable("id") String id, @PathVariable("pwd") String pwd) {
+        Users newUser = usersService.createUser(id, pwd);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
     @GetMapping("/{userIndex}/liked-coffees")
     public ResponseEntity<List<Coffee>> getLikedCoffeesByUserIndex(@PathVariable("userIndex") int userIndex) {
         List<Coffee> likedCoffees = usersService.getLikedCoffeeByUserIndex(userIndex);
