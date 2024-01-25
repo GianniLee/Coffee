@@ -45,6 +45,17 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
+    @Transactional
+    public Users createUser(String id, String pwd) {
+        Users newUser = new Users();
+        newUser.setId(id);
+        newUser.setPwd(pwd);
+        newUser.setHalfLife(5); // 기본 half_life 값으로 5 설정
+        newUser.setCoffeeIndexes(Collections.emptyList()); // liked_coffee는 초기에 비어있음
+
+        return usersRepository.save(newUser);
+    }
+
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
     }
