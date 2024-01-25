@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface UsersRepository extends JpaRepository<Users, Integer> {
     // You can add custom query methods if needed
     Optional<Users> findById(String id);
-    Optional<Users> findByIdAndPassword(String id, String password);
+    Optional<Users> findByIdAndPwd(String id, String pwd);
 }
 
