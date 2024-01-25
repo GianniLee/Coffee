@@ -26,6 +26,13 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Object> handleIllegalStateException(IllegalStateException e) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(e.getMessage());
+    }
+
     @GetMapping("/{userIndex}/liked-coffees")
     public ResponseEntity<List<Coffee>> getLikedCoffeesByUserIndex(@PathVariable("userIndex") int userIndex) {
         List<Coffee> likedCoffees = usersService.getLikedCoffeeByUserIndex(userIndex);
