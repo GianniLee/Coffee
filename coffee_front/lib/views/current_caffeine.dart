@@ -74,46 +74,45 @@ class _currentCaffeineView extends State<currentCaffeineView> {
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           // Add a condition to check if there is data to avoid null or empty lists.
           String safeSleepTime = calculateSafeToSleepTime(snapshot.data!);
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 32),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  margin: EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.brown,
-                    borderRadius: BorderRadius.circular(8),
+          return ListView(
+            // 변경: SingleChildScrollView를 ListView로 변경
+            children: <Widget>[
+              SizedBox(height: 32),
+              Container(
+                padding: EdgeInsets.all(16),
+                margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                decoration: BoxDecoration(
+                  color: Colors.brown,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  safeSleepTime,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: Text(
-                    safeSleepTime,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 32),
+              Center(
+                child: Container(
+                  width: graphWidth,
+                  height: 150,
+                  child: CustomPaint(
+                    size: Size(graphWidth, 150),
+                    painter: CaffeineGraphPainter(
+                      decayConstant: 0.14,
+                      coffeeRecords: snapshot.data!,
                     ),
                   ),
                 ),
-                SizedBox(height: 32),
-                Center(
-                  child: Container(
-                    width: graphWidth,
-                    height: 150,
-                    child: CustomPaint(
-                      size: Size(graphWidth, 150),
-                      painter: CaffeineGraphPainter(
-                        decayConstant: 0.14,
-                        coffeeRecords: snapshot.data!,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 32),
-                Container(
-                  height: 200,
-                  child: _buildCoffeeRecentList(snapshot.data!),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: 32),
+              Container(
+                height: 200,
+                child: _buildCoffeeRecentList(snapshot.data!),
+              ),
+            ],
           );
         } else {
           return Center(child: Text('No data available'));
@@ -178,62 +177,5 @@ class _currentCaffeineView extends State<currentCaffeineView> {
         );
       },
     );
-  }
-
-  // 더미 데이터 생성 함수
-  List<CoffeeRecord> createDummyData() {
-    // 더미 커피 데이터
-    final coffee1 = Coffee(
-      coffeeIndex: 1,
-      imageUrl: 'lib/sample/starbucks.jpg',
-      brandName: 'Brand A',
-      menuName: 'Espresso',
-      isHot: 1,
-      tall: 75,
-      grande: 150,
-      venti: 300,
-    );
-    final coffee2 = Coffee(
-      coffeeIndex: 2,
-      imageUrl: 'lib/sample/MegaCoffee.jpg',
-      brandName: 'Brand B',
-      menuName: 'Latte',
-      isHot: 0,
-      tall: 75,
-      grande: 150,
-      venti: 300,
-    );
-    final coffee3 = Coffee(
-      coffeeIndex: 3,
-      imageUrl: 'lib/sample/starbucks.jpg',
-      brandName: 'Brand C',
-      menuName: 'Cappuccino',
-      isHot: 1,
-      tall: 100,
-      grande: 200,
-      venti: 250,
-    );
-
-    // 더미 커피 레코드 데이터
-    final record1 = CoffeeRecord(
-      date: '20240123',
-      time: '06:00',
-      size: 0,
-      coffee: coffee1,
-    );
-    final record2 = CoffeeRecord(
-      date: '20240123',
-      time: '09:00',
-      size: 1,
-      coffee: coffee2,
-    );
-    final record3 = CoffeeRecord(
-      date: '20240123',
-      time: '19:20',
-      size: 2,
-      coffee: coffee3,
-    );
-
-    return [record1, record2, record3];
   }
 }
