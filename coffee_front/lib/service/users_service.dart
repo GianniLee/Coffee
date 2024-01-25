@@ -1,8 +1,30 @@
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var logger = Logger();
 const String apiUrl = "http://172.10.5.174:80";
+
+Future<bool> login(String id, String pwd) async {
+  final url = 'http://your-server.com/users/login/$id/$pwd'; // 서버의 URL로 변경
+  try {
+    final response = await http.post(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final userIndex = int.parse(response.body);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('userIndex', userIndex);
+      return true; // 로그인 성공
+    }
+  } catch (e) {
+    print('Login error: $e');
+  }
+  return false; // 로그인 실패
+}
+
+Future<int> getUserIndex() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('userIndex') ?? 0; // 'userIndex'가 없다면 기본값으로 0 반환
+}
 
 Future<double> getHalfLife(int userIndex) async {
   var url = Uri.parse('$apiUrl/users/${userIndex}/half-life');
