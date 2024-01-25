@@ -70,17 +70,17 @@ public class UsersController {
     }
 
     @GetMapping("/{userIndex}/half-life")
-    public ResponseEntity<Integer> getHalfLife(@PathVariable("userIndex") int userIndex) {
-        int halfLife = usersService.getHalfLifeByUserIndex(userIndex);
+    public ResponseEntity<Double> getHalfLife(@PathVariable("userIndex") int userIndex) {
+        double halfLife = usersService.getHalfLifeByUserIndex(userIndex);
         return ResponseEntity.ok(halfLife);
     }
 
     @PutMapping("/{userIndex}/update-half-life/{newHalfLife}")
-    public ResponseEntity<Integer> updateHalfLife(
+    public ResponseEntity<Double> updateHalfLife(
             @PathVariable("userIndex") int userIndex,
-            @PathVariable("newHalfLife") int newHalfLife) {
+            @PathVariable("newHalfLife") double newHalfLife) {
 
-        int updatedHalfLife = usersService.updateHalfLife(userIndex, newHalfLife);
+        double updatedHalfLife = usersService.updateHalfLife(userIndex, newHalfLife);
         return ResponseEntity.ok(updatedHalfLife);
     }
 }

@@ -29,13 +29,13 @@ public class UsersService {
         Users user1 = new Users();
         user1.setId("user1");
         user1.setPwd("password1");
-        user1.setHalfLife(5); // or any other value
+        user1.setHalfLife(0.139); // or any other value
         user1.setCoffeeIndexes(List.of(1, 2, 3)); // or any other coffee indexes
 
         Users user2 = new Users();
         user2.setId("user2");
         user2.setPwd("password2");
-        user2.setHalfLife(5); // or any other value
+        user2.setHalfLife(0.139); // or any other value
         user2.setCoffeeIndexes(List.of(4, 5, 6)); // or any other coffee indexes
 
         usersRepository.saveAll(List.of(user1, user2));
@@ -55,7 +55,7 @@ public class UsersService {
         Users newUser = new Users();
         newUser.setId(id);
         newUser.setPwd(pwd);
-        newUser.setHalfLife(5); // 기본 half_life 값으로 5 설정
+        newUser.setHalfLife(0.139); // 기본 half_life 값으로 5 설정
         newUser.setCoffeeIndexes(Collections.emptyList()); // liked_coffee는 초기에 비어있음
 
         newUser = usersRepository.save(newUser);
@@ -156,14 +156,14 @@ public class UsersService {
         return optionalUsers.orElse(null);
     }
 
-    public int getHalfLifeByUserIndex(int userIndex) {
+    public double getHalfLifeByUserIndex(int userIndex) {
         return usersRepository.findById(userIndex)
                 .map(Users::getHalfLife)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Transactional
-    public int updateHalfLife(int userIndex, int newHalfLife) {
+    public double updateHalfLife(int userIndex, double newHalfLife) {
         Users user = usersRepository.findById(userIndex)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

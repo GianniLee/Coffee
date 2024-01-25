@@ -24,7 +24,7 @@ public class Users {
     private String pwd;
 
     @Column(name = "half_life")
-    private int halfLife;
+    private double halfLife;
 
     @ElementCollection
     @CollectionTable(name = "liked_coffee", joinColumns = @JoinColumn(name = "user_index"))
