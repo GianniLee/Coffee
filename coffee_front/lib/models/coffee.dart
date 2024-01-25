@@ -33,9 +33,9 @@ class Coffee {
     return Coffee(
       coffeeIndex: index,
       imageUrl: getCoffeeImage(index),
-      brandName: json['brandName'] ?? '',
+      brandName: json['brand'] ?? '',
       menuName: json['coffeeName'] ?? '',
-      isHot: json['isHot'] ?? 0,
+      isHot: json['hot'] ?? 0,
       tall: json['tall'] ?? 0,
       grande: json['grande'] ?? 0,
       venti: json['venti'] ?? 0,

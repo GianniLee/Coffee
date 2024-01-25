@@ -12,8 +12,17 @@ class MyPageView extends StatefulWidget {
 
 class _MyPageViewState extends State<MyPageView> {
   final List<String> _medications = [
-    '시프란', '시프로신', '루복스', '파베린', '에리스로신', '에리스로마이신',
-    '메르시론', '야즈민', '다이앤-35', '테오-듀르', '유니필'
+    '시프란',
+    '시프로신',
+    '루복스',
+    '파베린',
+    '에리스로신',
+    '에리스로마이신',
+    '메르시론',
+    '야즈민',
+    '다이앤-35',
+    '테오-듀르',
+    '유니필'
   ];
 
   int? _selectedWeight;
@@ -72,7 +81,6 @@ class _MyPageViewState extends State<MyPageView> {
       prefs.setBool(key, value);
     }
   }
-
 
   // 복용 중인 약을 위한 새로운 위젯 생성 메서드
   Widget _buildMedicationChips() {
@@ -137,7 +145,8 @@ class _MyPageViewState extends State<MyPageView> {
           }),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('복용 중인 약', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            child: Text('복용 중인 약',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ),
           _buildMedicationChips(),
         ],
@@ -145,9 +154,11 @@ class _MyPageViewState extends State<MyPageView> {
     );
   }
 
-  Widget _buildDropdown(String title, dynamic selectedValue, int min, int max, ValueChanged<dynamic> onChanged) {
+  Widget _buildDropdown(String title, dynamic selectedValue, int min, int max,
+      ValueChanged<dynamic> onChanged) {
     List<int> values = List.generate(max - min + 1, (index) => min + index);
-    List<DropdownMenuItem<int>> menuItems = values.map<DropdownMenuItem<int>>((value) {
+    List<DropdownMenuItem<int>> menuItems =
+        values.map<DropdownMenuItem<int>>((value) {
       return DropdownMenuItem<int>(
         value: value,
         child: Text(value.toString()),
@@ -165,13 +176,17 @@ class _MyPageViewState extends State<MyPageView> {
     );
   }
 
-  Widget _buildToggleButtons(String title, bool isSelected, ValueChanged<bool> onChanged) {
+  Widget _buildToggleButtons(
+      String title, bool isSelected, ValueChanged<bool> onChanged) {
     return ListTile(
       title: Text(title),
       subtitle: ToggleButtons(
         children: <Widget>[
-          Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('예')),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('아니오')),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16), child: Text('예')),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text('아니오')),
         ],
         onPressed: (int index) {
           onChanged(index == 0);
