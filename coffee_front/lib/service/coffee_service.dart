@@ -34,11 +34,15 @@ Future<List<CoffeeRecord>> fetchDrinkedCoffees(int userId) async {
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
+    print("API Response: ${response.body}"); // API 응답 로그 출력
     var now = DateTime.now();
     var decodedResponse = utf8.decode(response.bodyBytes);
     List<dynamic> jsonData = jsonDecode(decodedResponse);
     return jsonData.map((json) {
+      //print("API Response: ${json['coffee']}");
       Coffee coffee = Coffee.fromJson(json['coffee']);
+      // print("Coffee Data: ${coffee.brandName}");
+      // print("Coffee Data: ${coffee.coffeeIndex}");
       // 여기서 coffee.coffeeIndex를 사용하여 필요한 작업 수행
       return CoffeeRecord(
         date: json['date'],
@@ -70,5 +74,23 @@ Future<void> createDrinkedCoffee(
     // Handle the error
     logger.e("Failed to create coffee record: ${response.statusCode}");
     throw Exception('Failed to create coffee record');
+  }
+}
+
+Future<Coffee?> toggleCoffeeTemperature(int coffeeIndex, int isHot) async {
+  if (isHot == 2 || isHot == 3) {
+    // 2와 3은 온도 변경 불가능
+    print("Temperature option is fixed. Cannot change.");
+    return null;
+  }
+
+  var endpoint = isHot == 0 ? 'hot-to-cold' : 'cold-to-hot';
+  var url = Uri.parse('$apiUrl/coffee/$endpoint/$coffeeIndex');
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    return Coffee.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to toggle coffee temperature');
   }
 }

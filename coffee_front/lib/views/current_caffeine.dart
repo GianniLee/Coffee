@@ -59,10 +59,10 @@ class _currentCaffeineView extends State<currentCaffeineView> {
     final safeTime = caffeinePainter.goodToSleepTime();
 
     if (safeTime != null) {
-      // 안전한 시간이 계산되었다면 그 시간을 반환합니다.
+      // 시간이 계산되었다면 그 시간을 반환합니다.
       return "${safeTime.hour}시부터 꿀잠 잘 수 있어요!";
     } else {
-      // 안전한 시간이 계산되지 않았다면 "-"를 반환합니다.
+      // 시간이 계산되지 않았다면 "-"를 반환합니다.
       return "-";
     }
   }
