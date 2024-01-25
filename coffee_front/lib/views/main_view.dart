@@ -28,7 +28,7 @@ class _MainViewState extends State<MainView> {
   @override
   void initState() {
     super.initState();
-    coffeeList = []; // 리스트를 초기화
+    //coffeeList = []; // 리스트를 초기화
     // _brandNameNotifier.value = coffeeList[0].brandName; // 첫 번째 커피 브랜드명으로 초기화
     // _temperatureOption = coffeeList[0].isHot; // 첫 번째 커피의 온도 옵션으로 초기화
     // tallCaffeine = coffeeList[0].tall; // 첫 번째 커피의 카페인 양으로 초기화
@@ -159,6 +159,8 @@ class _MainViewState extends State<MainView> {
   // 각 SelectedCoffee 객체에 대한 카드 생성 함수: 커피 이미지 및 메뉴 이름 등을 표시
   Widget _buildSelectedCoffee(
       BuildContext context, double cardWidth, Coffee coffee) {
+    print("Brand: ${coffee.brandName}");
+    print("Temperature Option: ${coffee.isHot}");
     return Container(
       margin:
           const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 전체 카드 여백
@@ -173,6 +175,7 @@ class _MainViewState extends State<MainView> {
           ),
         ],
       ),
+
       child: Stack(
         alignment: Alignment.center, // 스택의 자식들을 중앙에 배치
         children: [
@@ -332,6 +335,7 @@ class _MainViewState extends State<MainView> {
               buttonIndex < isSelected.length;
               buttonIndex++) {
             isSelected[buttonIndex] = buttonIndex == index;
+            _toggleTemperature(index);
           }
         });
       },
@@ -461,6 +465,8 @@ class _MainViewState extends State<MainView> {
       });
       if (drinkedCoffees.isNotEmpty) {
         setState(() {
+          //print("Why: ${coffeeList}");
+          print("Why: ${drinkedCoffees[0].coffee.coffeeIndex}");
           coffeeList = drinkedCoffees.map((record) => record.coffee).toList();
           _updateCurrentCoffee(0); // 첫 번째 커피로 상태를 업데이트
           _brandNameNotifier.value = coffeeList[0].brandName;
@@ -489,6 +495,24 @@ class _MainViewState extends State<MainView> {
         grandeCaffeine = coffeeList[index].grande;
         ventiCaffeine = coffeeList[index].venti;
       });
+    }
+  }
+
+  void _toggleTemperature(int index) async {
+    try {
+      // isHot 값 자체를 toggleCoffeeTemperature 함수에 전달
+      Coffee? updatedCoffee = await toggleCoffeeTemperature(
+          coffeeList[index].coffeeIndex, coffeeList[index].isHot);
+      if (updatedCoffee != null) {
+        setState(() {
+          coffeeList[index] = updatedCoffee; // 리스트 내 해당 커피 업데이트
+          if (_currentPageIndex == index) {
+            _updateCurrentCoffee(index); // 현재 보고 있는 커피 정보 업데이트
+          }
+        });
+      }
+    } catch (e) {
+      print('Error toggling temperature: $e');
     }
   }
 }
