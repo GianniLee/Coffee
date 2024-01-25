@@ -34,6 +34,7 @@ Future<List<CoffeeRecord>> fetchDrinkedCoffees(int userId) async {
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
+    print("API Response: ${response.body}"); // API 응답 로그 출력
     var now = DateTime.now();
     var decodedResponse = utf8.decode(response.bodyBytes);
     List<dynamic> jsonData = jsonDecode(decodedResponse);

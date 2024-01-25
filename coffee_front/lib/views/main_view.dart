@@ -3,6 +3,7 @@ import '../const/margins.dart'; // 마진 상수 파일 import
 import '../models/coffee.dart'; // SelectedCoffee 모델 import
 import '../const/color.dart';
 import 'select_coffee.dart';
+import '../service/coffee_service.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -13,8 +14,7 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
-  ValueNotifier<String> _brandNameNotifier =
-      ValueNotifier("------"); // 초기 값으로 "Starbucks" 설정
+  ValueNotifier<String> _brandNameNotifier = ValueNotifier("------");
 
   List<Coffee> coffeeList = [];
   int _temperatureOption = 0;
@@ -28,13 +28,14 @@ class _MainViewState extends State<MainView> {
   @override
   void initState() {
     super.initState();
-    coffeeList = createDummySelectedCoffeeList(); // 리스트를 초기화
-    _brandNameNotifier.value = coffeeList[0].brandName; // 첫 번째 커피 브랜드명으로 초기화
-    _temperatureOption = coffeeList[0].isHot; // 첫 번째 커피의 온도 옵션으로 초기화
-    tallCaffeine = coffeeList[0].tall; // 첫 번째 커피의 카페인 양으로 초기화
-    grandeCaffeine = coffeeList[0].grande;
-    ventiCaffeine = coffeeList[0].venti;
+    coffeeList = []; // 리스트를 초기화
+    // _brandNameNotifier.value = coffeeList[0].brandName; // 첫 번째 커피 브랜드명으로 초기화
+    // _temperatureOption = coffeeList[0].isHot; // 첫 번째 커피의 온도 옵션으로 초기화
+    // tallCaffeine = coffeeList[0].tall; // 첫 번째 커피의 카페인 양으로 초기화
+    // grandeCaffeine = coffeeList[0].grande;
+    // ventiCaffeine = coffeeList[0].venti;
     _currentPageIndex = 0; // 현재 페이지 인덱스를 0으로 초기화
+    _loadDrinkedCoffees(1);
   }
 
   @override
@@ -93,6 +94,7 @@ class _MainViewState extends State<MainView> {
     return ValueListenableBuilder<String>(
       valueListenable: brandNameNotifier,
       builder: (context, brandName, child) {
+        print("Displayed Brand Name: $brandName");
         return Padding(
           padding: const EdgeInsets.only(
             top: horizontalMargin / 2,
@@ -186,7 +188,7 @@ class _MainViewState extends State<MainView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12), // 이미지 모서리 둥글게 처리
                       image: DecorationImage(
-                        image: AssetImage(coffee.imageUrl),
+                        image: NetworkImage(coffee.imageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -222,56 +224,56 @@ class _MainViewState extends State<MainView> {
     );
   }
 
-  // 더미 데이터로 SelectedCoffee 객체 리스트 생성 함수: 테스트 목적으로 사용
-  List<Coffee> createDummySelectedCoffeeList() {
-    List<Coffee> coffeeList = [];
+  // // 더미 데이터로 SelectedCoffee 객체 리스트 생성 함수: 테스트 목적으로 사용
+  // List<Coffee> createDummySelectedCoffeeList() {
+  //   List<Coffee> coffeeList = [];
 
-    coffeeList.add(createSelectedCoffee({
-      'coffeeIndex': 1,
-      'imageUrl': 'lib/sample/MegaCoffee.jpg',
-      'brandName': '메가커피',
-      'menuName': '라떼',
-      'isHot': 0,
-      'tall': 75,
-      'grande': 150,
-      'venti': 300,
-    }));
+  //   coffeeList.add(createSelectedCoffee({
+  //     'coffeeIndex': 1,
+  //     'imageUrl': 'lib/sample/MegaCoffee.jpg',
+  //     'brandName': '메가커피',
+  //     'menuName': '라떼',
+  //     'isHot': 0,
+  //     'tall': 75,
+  //     'grande': 150,
+  //     'venti': 300,
+  //   }));
 
-    coffeeList.add(createSelectedCoffee({
-      'coffeeIndex': 2,
-      'imageUrl': 'lib/sample/starbucks.jpg',
-      'brandName': '스타벅스',
-      'menuName': '아이스 아메리카노',
-      'isHot': 1,
-      'tall': 100,
-      'grande': 150,
-      'venti': 200,
-    }));
+  //   coffeeList.add(createSelectedCoffee({
+  //     'coffeeIndex': 2,
+  //     'imageUrl': 'lib/sample/starbucks.jpg',
+  //     'brandName': '스타벅스',
+  //     'menuName': '아이스 아메리카노',
+  //     'isHot': 1,
+  //     'tall': 100,
+  //     'grande': 150,
+  //     'venti': 200,
+  //   }));
 
-    coffeeList.add(createSelectedCoffee({
-      'coffeeIndex': 3,
-      'imageUrl': 'lib/sample/MegaCoffee.jpg',
-      'brandName': '메가커피',
-      'menuName': '라떼',
-      'isHot': 2,
-      'tall': -1,
-      'grande': 150,
-      'venti': 200,
-    }));
+  //   coffeeList.add(createSelectedCoffee({
+  //     'coffeeIndex': 3,
+  //     'imageUrl': 'lib/sample/MegaCoffee.jpg',
+  //     'brandName': '메가커피',
+  //     'menuName': '라떼',
+  //     'isHot': 2,
+  //     'tall': -1,
+  //     'grande': 150,
+  //     'venti': 200,
+  //   }));
 
-    coffeeList.add(createSelectedCoffee({
-      'coffeeIndex': 4,
-      'imageUrl': 'lib/sample/MegaCoffee_1.jpg',
-      'brandName': '메가커피',
-      'menuName': '커피 프라페',
-      'isHot': 3,
-      'tall': -1,
-      'grande': 150,
-      'venti': -1,
-    }));
+  //   coffeeList.add(createSelectedCoffee({
+  //     'coffeeIndex': 4,
+  //     'imageUrl': 'lib/sample/MegaCoffee_1.jpg',
+  //     'brandName': '메가커피',
+  //     'menuName': '커피 프라페',
+  //     'isHot': 3,
+  //     'tall': -1,
+  //     'grande': 150,
+  //     'venti': -1,
+  //   }));
 
-    return coffeeList;
-  }
+  //   return coffeeList;
+  // }
 
   // 데이터로부터 SelectedCoffee 객체 생성
   Coffee createSelectedCoffee(Map<String, dynamic> data) {
@@ -446,5 +448,47 @@ class _MainViewState extends State<MainView> {
       },
       child: Text('Coffee List'),
     );
+  }
+
+  Future<void> _loadDrinkedCoffees(int userIndex) async {
+    try {
+      var drinkedCoffees = await fetchDrinkedCoffees(userIndex);
+      // 최신 순으로 정렬
+      drinkedCoffees.sort((a, b) {
+        var dateA = DateTime.parse('${a.date}T${a.time}');
+        var dateB = DateTime.parse('${b.date}T${b.time}');
+        return dateB.compareTo(dateA); // 최근 날짜가 앞에 오도록
+      });
+      if (drinkedCoffees.isNotEmpty) {
+        setState(() {
+          coffeeList = drinkedCoffees.map((record) => record.coffee).toList();
+          _updateCurrentCoffee(0); // 첫 번째 커피로 상태를 업데이트
+          _brandNameNotifier.value = coffeeList[0].brandName;
+          print("Loaded Brand Name: ${coffeeList[0].brandName}");
+        });
+      } else {
+        setState(() {
+          // 커피 리스트가 비어 있는 경우 처리
+          _brandNameNotifier.value = '커피 기록 없음';
+          tallCaffeine = 0;
+          grandeCaffeine = 0;
+          ventiCaffeine = 0;
+        });
+      }
+    } catch (e) {
+      print('Error fetching drinked coffees: $e');
+    }
+  }
+
+  void _updateCurrentCoffee(int index) {
+    if (coffeeList.isNotEmpty && index < coffeeList.length) {
+      setState(() {
+        _brandNameNotifier.value = coffeeList[index].brandName;
+        _temperatureOption = coffeeList[index].isHot;
+        tallCaffeine = coffeeList[index].tall;
+        grandeCaffeine = coffeeList[index].grande;
+        ventiCaffeine = coffeeList[index].venti;
+      });
+    }
   }
 }
