@@ -4,7 +4,7 @@ import '../models/coffee.dart';
 import '../models/coffee_record.dart';
 
 class CaffeineGraphPainter extends CustomPainter {
-  final double? decayConstant;
+  final double decayConstant;
   final List<CoffeeRecord> coffeeRecords; // CoffeeRecord 리스트로 변경
 
   CaffeineGraphPainter({
@@ -170,7 +170,7 @@ class CaffeineGraphPainter extends CustomPainter {
           concentration = (amount / 15) * t; // 15분 동안 선형 증가
         } else {
           concentration =
-              amount * math.exp(-decayConstant * (t - 15) / 60); // 지수 감소
+              amount * math.exp(-(decayConstant ?? 0.14) * (t - 15) / 60); // 지수 감소
         }
         totalConcentration += concentration;
       }
