@@ -5,6 +5,7 @@ import '../models/coffee.dart';
 import '../models/coffee_record.dart';
 import '../service/coffee_service.dart';
 import '../views/caffeine_graph_painter.dart'; // Ensure this import is correct.
+import 'package:coffee_front/globals.dart' as globals;
 
 class currentCaffeineView extends StatefulWidget {
   const currentCaffeineView({super.key});
