@@ -46,22 +46,22 @@ public class DrinkedCoffeeService {
             DrinkedCoffee drinkedCoffee1 = new DrinkedCoffee();
             drinkedCoffee1.setUser(user1);
             drinkedCoffee1.setCoffee(coffee1);
-            drinkedCoffee1.setDate("2024-01-23");
-            drinkedCoffee1.setTime("10:00:00");
+            drinkedCoffee1.setDate("2024-01-24");
+            drinkedCoffee1.setTime("21:00:00");
             drinkedCoffee1.setSize(1);
 
             DrinkedCoffee drinkedCoffee2 = new DrinkedCoffee();
             drinkedCoffee2.setUser(user1);
             drinkedCoffee2.setCoffee(coffee2);
-            drinkedCoffee2.setDate("2024-01-23");
+            drinkedCoffee2.setDate("2024-01-25");
             drinkedCoffee2.setTime("12:30:00");
             drinkedCoffee1.setSize(2);
 
             DrinkedCoffee drinkedCoffee3 = new DrinkedCoffee();
             drinkedCoffee3.setUser(user2);
             drinkedCoffee3.setCoffee(coffee1);
-            drinkedCoffee3.setDate("2024-01-24");
-            drinkedCoffee3.setTime("08:45:00");
+            drinkedCoffee3.setDate("2024-01-25");
+            drinkedCoffee3.setTime("2:45:00");
             drinkedCoffee1.setSize(0);
 
             // Save the dummy DrinkedCoffee entries
@@ -70,7 +70,8 @@ public class DrinkedCoffeeService {
     }
 
     @Transactional
-    public DrinkedCoffee createAndSaveDrinkedCoffee(int userIndex, int coffeeIndex, int size, String date, String time) {
+    public DrinkedCoffee createAndSaveDrinkedCoffee(int userIndex, int coffeeIndex, int size, String date,
+            String time) {
         // Find user and coffee entities by their indices
         Users user = usersRepository.findById(userIndex).orElse(null);
         Coffee coffee = coffeeRepository.findById(coffeeIndex).orElse(null);
@@ -95,7 +96,7 @@ public class DrinkedCoffeeService {
         // Return the saved object, which includes the generated drinkedCoffeeIndex
         return savedDrinkedCoffee;
     }
-    
+
     @Transactional
     public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
         Users user = usersRepository.findById(userIndex).orElse(null);

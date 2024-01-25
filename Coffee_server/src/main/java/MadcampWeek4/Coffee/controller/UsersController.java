@@ -33,6 +33,14 @@ public class UsersController {
             .body(e.getMessage());
     }
 
+    @PostMapping("/login/{id}/{pwd}")
+    public ResponseEntity<Integer> login(@PathVariable String id, @PathVariable String pwd) {
+        Optional<Integer> userIndex = usersService.login(id, pwd);
+        return userIndex
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
     @GetMapping("/{userIndex}/liked-coffees")
     public ResponseEntity<List<Coffee>> getLikedCoffeesByUserIndex(@PathVariable("userIndex") int userIndex) {
         List<Coffee> likedCoffees = usersService.getLikedCoffeeByUserIndex(userIndex);

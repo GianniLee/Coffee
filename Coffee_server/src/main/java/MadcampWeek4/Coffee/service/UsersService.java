@@ -71,6 +71,11 @@ public class UsersService {
         return newUser;
     }
 
+    public Optional<Integer> login(String id, String pwd) {
+        Optional<Users> user = usersRepository.findByIdAndPassword(id, pwd);
+        return user.map(Users::getUserIndex);
+    }
+
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
     }
