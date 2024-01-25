@@ -198,4 +198,22 @@ class CaffeineGraphPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
+
+  // 50mg 이하로 떨어지는 시간을 계산하는 함수를 수정
+  DateTime? goodToSleepTime() {
+    final startTime = DateTime.now().subtract(Duration(hours: 6));
+    final endTime = DateTime.now().add(Duration(hours: 18));
+    final totalDuration = endTime.difference(startTime).inMinutes;
+    DateTime? safeTime;
+
+    for (var i = 0; i <= totalDuration; i++) {
+      final time = startTime.add(Duration(minutes: i));
+      if (_caffeineConcentrationAtTime(time) <= 50) {
+        safeTime = time;
+        break;
+      }
+    }
+    // 만약 50mg 이하로 떨어지는 시간이 없으면 null을 반환합니다.
+    return safeTime;
+  }
 }
