@@ -29,13 +29,13 @@ public class UsersService {
         Users user1 = new Users();
         user1.setId("user1");
         user1.setPwd("password1");
-        user1.setHalfLife(30); // or any other value
+        user1.setHalfLife(5); // or any other value
         user1.setCoffeeIndexes(List.of(1, 2, 3)); // or any other coffee indexes
 
         Users user2 = new Users();
         user2.setId("user2");
         user2.setPwd("password2");
-        user2.setHalfLife(25); // or any other value
+        user2.setHalfLife(5); // or any other value
         user2.setCoffeeIndexes(List.of(4, 5, 6)); // or any other coffee indexes
 
         usersRepository.saveAll(List.of(user1, user2));
@@ -47,13 +47,28 @@ public class UsersService {
 
     @Transactional
     public Users createUser(String id, String pwd) {
+        // 동일한 ID를 가진 사용자가 이미 있는지 확인
+        if (usersRepository.findById(id).isPresent()) {
+            throw new IllegalStateException("User with id " + id + " already exists.");
+        }
+
         Users newUser = new Users();
         newUser.setId(id);
         newUser.setPwd(pwd);
         newUser.setHalfLife(5); // 기본 half_life 값으로 5 설정
         newUser.setCoffeeIndexes(Collections.emptyList()); // liked_coffee는 초기에 비어있음
 
-        return usersRepository.save(newUser);
+        newUser = usersRepository.save(newUser);
+        // System.out.println("newUser created");
+
+        // // 저장 후 ID 확인
+        // if (newUser.getUserIndex() > 0) {
+        //     System.out.println("User created with ID: " + newUser.getUserIndex());
+        // } else {
+        //     System.out.println("Failed to create user.");
+        // }
+
+        return newUser;
     }
 
     public List<Users> getAllUsers() {
