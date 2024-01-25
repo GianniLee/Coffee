@@ -69,22 +69,33 @@ public class DrinkedCoffeeService {
         }
     }
 
-    // @Transactional
-    // public List<DrinkedCoffeeDTO> getDrinkedCoffeeByUserIndex(int userIndex) {
-    // Users user = usersRepository.findById(userIndex).orElse(null);
-    //
-    // if (user != null) {
-    // List<DrinkedCoffee> drinkedCoffees =
-    // drinkedCoffeeRepository.findByUser(user);
-    //
-    // // Convert DrinkedCoffee entities to DrinkedCoffeeDto objects
-    // return drinkedCoffees.stream()
-    // .map(DTOConverter::convertToDto)
-    // .collect(Collectors.toList());
-    // }
-    //
-    // return List.of(); // 사용자가 없으면 빈 목록 반환
-    // }
+    @Transactional
+    public DrinkedCoffee createAndSaveDrinkedCoffee(int userIndex, int coffeeIndex, int size, String date, String time) {
+        // Find user and coffee entities by their indices
+        Users user = usersRepository.findById(userIndex).orElse(null);
+        Coffee coffee = coffeeRepository.findById(coffeeIndex).orElse(null);
+
+        if (user == null || coffee == null) {
+            // Handle the case where user or coffee is not found
+            // You might throw an exception or return null based on your design choice
+            return null;
+        }
+
+        // Create a new DrinkedCoffee object
+        DrinkedCoffee drinkedCoffee = new DrinkedCoffee();
+        drinkedCoffee.setUser(user);
+        drinkedCoffee.setCoffee(coffee);
+        drinkedCoffee.setSize(size);
+        drinkedCoffee.setDate(date);
+        drinkedCoffee.setTime(time);
+
+        // Save the DrinkedCoffee object to the database
+        DrinkedCoffee savedDrinkedCoffee = drinkedCoffeeRepository.save(drinkedCoffee);
+
+        // Return the saved object, which includes the generated drinkedCoffeeIndex
+        return savedDrinkedCoffee;
+    }
+    
     @Transactional
     public List<DrinkedCoffee> getDrinkedCoffeeByUserIndex(int userIndex) {
         Users user = usersRepository.findById(userIndex).orElse(null);
