@@ -4,7 +4,7 @@ import '../models/coffee.dart';
 import '../models/coffee_record.dart';
 
 class CaffeineGraphPainter extends CustomPainter {
-  final double decayConstant;
+  final double? decayConstant;
   final List<CoffeeRecord> coffeeRecords; // CoffeeRecord 리스트로 변경
 
   CaffeineGraphPainter({

@@ -46,7 +46,7 @@ class _currentCaffeineView extends State<currentCaffeineView> {
   // 카페인 농도가 안전한 수준으로 떨어지는 시간을 계산하고 포맷팅하여 반환합니다.
   String calculateSafeToSleepTime(List<CoffeeRecord> coffeeRecords) {
     final caffeinePainter = CaffeineGraphPainter(
-      decayConstant: 0.14,
+      decayConstant: globals.globalDecayConstant,
       coffeeRecords: coffeeRecords,
     );
     final safeTime = caffeinePainter.goodToSleepTime();
@@ -102,7 +102,7 @@ class _currentCaffeineView extends State<currentCaffeineView> {
                   child: CustomPaint(
                     size: Size(graphWidth, 150),
                     painter: CaffeineGraphPainter(
-                      decayConstant: 0.14,
+                      decayConstant: globals.globalDecayConstant,
                       coffeeRecords: snapshot.data!,
                     ),
                   ),
