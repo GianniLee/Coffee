@@ -1,9 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import '../views/caffeine_graph_painter.dart'; // 분리된 파일을 임포트합니다.
+import 'dart:async';
+import 'dart:math' as math;
 import '../models/coffee.dart';
 import '../models/coffee_record.dart';
 import '../service/coffee_service.dart';
+import '../views/caffeine_graph_painter.dart'; // Ensure this import is correct.
 
 class currentCaffeineView extends StatefulWidget {
   const currentCaffeineView({super.key});
@@ -41,46 +42,77 @@ class _currentCaffeineView extends State<currentCaffeineView> {
     super.dispose();
   }
 
+  // 카페인 농도가 안전한 수준으로 떨어지는 시간을 계산하고 포맷팅하여 반환합니다.
+  String calculateSafeToSleepTime(List<CoffeeRecord> coffeeRecords) {
+    final caffeinePainter = CaffeineGraphPainter(
+      decayConstant: 0.14,
+      coffeeRecords: coffeeRecords,
+    );
+    final safeTime = caffeinePainter.goodToSleepTime();
+
+    if (safeTime != null) {
+      // 안전한 시간이 계산되었다면 그 시간을 반환합니다.
+      return "${safeTime.hour}시부터 꿀잠 잘 수 있어요!";
+    } else {
+      // 안전한 시간이 계산되지 않았다면 "-"를 반환합니다.
+      return "-";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double graphWidth = screenWidth - 32;
 
-    // FutureBuilder를 사용하여 비동기 데이터를 처리합니다.
     return FutureBuilder<List<CoffeeRecord>>(
       future: _coffeeRecordsFuture,
       builder: (context, snapshot) {
-        // 데이터 로딩 중이라면 로딩 인디케이터를 표시
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          // 데이터 로딩 중 오류 발생 시 오류 메시지를 표시
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 32),
-                Center(
-                  child: Container(
-                    width: graphWidth,
-                    height: 150,
-                    child: CustomPaint(
-                      size: Size(graphWidth, 150),
-                      painter: CaffeineGraphPainter(
-                        decayConstant: 0.14,
-                        coffeeRecords: snapshot.data!,
-                      ),
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          // Add a condition to check if there is data to avoid null or empty lists.
+          String safeSleepTime = calculateSafeToSleepTime(snapshot.data!);
+          return ListView(
+            // 변경: SingleChildScrollView를 ListView로 변경
+            children: <Widget>[
+              SizedBox(height: 32),
+              Container(
+                padding: EdgeInsets.all(16),
+                margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                decoration: BoxDecoration(
+                  color: Colors.brown,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  safeSleepTime,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 32),
+              Center(
+                child: Container(
+                  width: graphWidth,
+                  height: 150,
+                  child: CustomPaint(
+                    size: Size(graphWidth, 150),
+                    painter: CaffeineGraphPainter(
+                      decayConstant: 0.14,
+                      coffeeRecords: snapshot.data!,
                     ),
                   ),
                 ),
-                SizedBox(height: 32),
-                Container(
-                  height: 200,
-                  child: _buildCoffeeRecentList(snapshot.data!),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: 32),
+              Container(
+                height: 200,
+                child: _buildCoffeeRecentList(snapshot.data!),
+              ),
+            ],
           );
         } else {
           return Center(child: Text('No data available'));
@@ -145,62 +177,5 @@ class _currentCaffeineView extends State<currentCaffeineView> {
         );
       },
     );
-  }
-
-  // 더미 데이터 생성 함수
-  List<CoffeeRecord> createDummyData() {
-    // 더미 커피 데이터
-    final coffee1 = Coffee(
-      coffeeIndex: 1,
-      imageUrl: 'lib/sample/starbucks.jpg',
-      brandName: 'Brand A',
-      menuName: 'Espresso',
-      isHot: 1,
-      tall: 75,
-      grande: 150,
-      venti: 300,
-    );
-    final coffee2 = Coffee(
-      coffeeIndex: 2,
-      imageUrl: 'lib/sample/MegaCoffee.jpg',
-      brandName: 'Brand B',
-      menuName: 'Latte',
-      isHot: 0,
-      tall: 75,
-      grande: 150,
-      venti: 300,
-    );
-    final coffee3 = Coffee(
-      coffeeIndex: 3,
-      imageUrl: 'lib/sample/starbucks.jpg',
-      brandName: 'Brand C',
-      menuName: 'Cappuccino',
-      isHot: 1,
-      tall: 100,
-      grande: 200,
-      venti: 250,
-    );
-
-    // 더미 커피 레코드 데이터
-    final record1 = CoffeeRecord(
-      date: '20240123',
-      time: '06:00',
-      size: 0,
-      coffee: coffee1,
-    );
-    final record2 = CoffeeRecord(
-      date: '20240123',
-      time: '09:00',
-      size: 1,
-      coffee: coffee2,
-    );
-    final record3 = CoffeeRecord(
-      date: '20240123',
-      time: '19:20',
-      size: 2,
-      coffee: coffee3,
-    );
-
-    return [record1, record2, record3];
   }
 }

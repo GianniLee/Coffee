@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../const/color.dart';
 import '../service/coffee_service.dart';
 import '../models/coffee.dart';
+import 'package:intl/intl.dart';
 
 class CoffeeTab {
   String title;
@@ -332,8 +333,30 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
                 ),
                 TextButton(
                   child: Text('추가'),
-                  onPressed: () {
-                    // TODO: 여기에 추가 작업을 구현하세요.
+                  onPressed: () async {
+                    // 사용자가 선택한 커피의 인덱스와 사이즈 인덱스를 기반으로 서버에 기록을 생성합니다.
+                    // 여기서는 userIndex를 예시로 1로 설정했으나, 실제 사용자 인덱스를 사용해야 합니다.
+                    // 또한, 날짜와 시간도 현재 날짜와 시간을 사용하여 포맷해야 합니다.
+                    int userIndex = 1; // 예제로 사용자 인덱스를 1로 설정함
+                    int coffeeIndex =
+                        selectedCoffee!.coffeeIndex; // 선택된 커피의 인덱스
+                    int sizeIndex = ['Tall', 'Grande', 'Venti']
+                        .indexOf(localSelectedSize); // 사이즈 인덱스
+                    String date = DateFormat('yyyyMMdd')
+                        .format(DateTime.now()); // 오늘 날짜 포맷
+                    String time =
+                        DateFormat('HH:mm').format(DateTime.now()); // 현재 시간 포맷
+
+                    try {
+                      await createDrinkedCoffee(
+                          userIndex, coffeeIndex, sizeIndex, date, time);
+                      // 성공 메시지나 로그를 표시하거나 필요한 UI 업데이트를 수행할 수 있습니다.
+                      logger.i("Coffee record successfully uploaded.");
+                      Navigator.of(context).pop(); // 다이얼로그 닫기
+                    } catch (e) {
+                      // 에러 처리
+                      logger.e("Error creating coffee record: $e");
+                    }
                     Navigator.of(context).pop();
                   },
                 ),

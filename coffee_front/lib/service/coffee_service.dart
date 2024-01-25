@@ -5,13 +5,14 @@ import '../models/coffee_record.dart';
 import 'package:logger/logger.dart';
 
 var logger = Logger();
+String apiUrl = 'http://172.10.5.174:80';
 
 String getCoffeeImage(int coffeeIndex) {
-  return 'http://172.10.5.174:80/$coffeeIndex.jpg';
+  return '$apiUrl/$coffeeIndex.jpg';
 }
 
 Future<List<Coffee>> fetchCoffeeDataByBrand(String brandName) async {
-  var url = Uri.parse('http://172.10.5.174:80/coffee/by-brand/$brandName');
+  var url = Uri.parse('$apiUrl/coffee/by-brand/$brandName');
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
@@ -29,7 +30,7 @@ Future<List<Coffee>> fetchCoffeeDataByBrand(String brandName) async {
 }
 
 Future<List<CoffeeRecord>> fetchDrinkedCoffees(int userId) async {
-  var url = Uri.parse('http://172.10.5.174:80/drinked-coffees/by-user/$userId');
+  var url = Uri.parse('$apiUrl/drinked-coffees/by-user/$userId');
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
@@ -52,5 +53,22 @@ Future<List<CoffeeRecord>> fetchDrinkedCoffees(int userId) async {
     }).toList();
   } else {
     throw Exception('Failed to load drinked coffee data for user $userId');
+  }
+}
+
+Future<void> createDrinkedCoffee(
+    int userIndex, int coffeeIndex, int size, String date, String time) async {
+  var url = Uri.parse(
+      '$apiUrl/drinked-coffees/create/$userIndex/$coffeeIndex/$size/$date/$time');
+
+  final response = await http.post(url);
+
+  if (response.statusCode == 201) {
+    // Created
+    logger.i("Coffee record created: ${response.body}");
+  } else {
+    // Handle the error
+    logger.e("Failed to create coffee record: ${response.statusCode}");
+    throw Exception('Failed to create coffee record');
   }
 }
