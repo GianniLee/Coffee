@@ -11,6 +11,7 @@ class MyPageView extends StatefulWidget {
 }
 
 class _MyPageViewState extends State<MyPageView> {
+  int userIndex = 1;
   final List<String> _medications = [
     '시프란',
     '시프로신',
@@ -38,11 +39,17 @@ class _MyPageViewState extends State<MyPageView> {
   @override
   void initState() {
     super.initState();
+    // _initializeUserIndex();
     _medications.forEach((medication) {
       _selectedMedications[medication] = false;
     });
     _loadPreferences();
   }
+
+  // void _initializeUserIndex() async {
+  //   userIndex = await getUserIndex();
+  //   // 필요한 경우 여기에서 추가적인 초기화 작업을 수행
+  // }
 
   _saveMedicationPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -82,6 +89,29 @@ class _MyPageViewState extends State<MyPageView> {
     }
   }
 
+  Future<double> calculateDecayConstant() async{
+    double baseDecay = await getHalfLife(userIndex);  // 기본 Decay Constant 값
+    double maxDecay = 0.23;  // 최대 Decay Constant 값
+
+    // 각 항목에 대한 가중치 설정
+    double weightFactor = (_selectedWeight ?? 70) / 1000;  // 예: 70kg이면 0.07
+    double heightFactor = (_selectedHeight ?? 175) / 1000; // 예: 175cm이면 0.175
+    double ageFactor = (_selectedAge ?? 30) / 1000;        // 예: 30세이면 0.03
+    double liverDiseaseFactor = _hasLiverDisease ? 0.01 : 0.0; // 간 질환이 있으면 0.01
+    double smokerFactor = _isSmoker ? 0.01 : 0.0;             // 흡연자면 0.01
+    double medicationFactor = _selectedMedications.length * 0.005; // 약 복용 수에 따른 가중치
+
+    // 가중치를 사용하여 decayConstant 계산
+    double decayConstant = baseDecay - (weightFactor + ageFactor + liverDiseaseFactor + smokerFactor + medicationFactor) + heightFactor;
+
+    // decayConstant가 정해진 범위 내에 있도록 조정
+    if (decayConstant < baseDecay) decayConstant = baseDecay;
+    if (decayConstant > maxDecay) decayConstant = maxDecay;
+
+    return decayConstant;
+    updateHalfLife(userIndex, decayConstant);
+  }
+
   // 복용 중인 약을 위한 새로운 위젯 생성 메서드
   Widget _buildMedicationChips() {
     return Wrap(
@@ -102,6 +132,7 @@ class _MyPageViewState extends State<MyPageView> {
                 _selectedMedications['선택 안함'] = false;
               }
               _selectedMedications[medication] = selected;
+              Future<double> newDecayConstant = calculateDecayConstant();
             });
             _saveMedicationPreferences();
           },
@@ -112,12 +143,29 @@ class _MyPageViewState extends State<MyPageView> {
 
   @override
   Widget build(BuildContext context) {
+    double currentDecayConstant = 0.14;
+    // 반감기 시간 계산
+    int halfLifeTime = (currentDecayConstant != 0)
+        ? ((-math.log(1/2) / currentDecayConstant).round()).toInt()
+        : 0;
     return Scaffold(
       appBar: AppBar(
         title: Text('MY PAGE'),
       ),
       body: ListView(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('내 반감기', style: TextStyle(fontSize: 20)),
+                // 반감기 시간 표시
+                Text('${halfLifeTime} 시간',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
           _buildDropdown('몸무게', _selectedWeight, 44, 100, (newValue) {
             setState(() => _selectedWeight = newValue);
             _savePreferences('weight', newValue);

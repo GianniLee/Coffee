@@ -4,8 +4,8 @@ import 'dart:math' as math;
 import '../models/coffee.dart';
 import '../models/coffee_record.dart';
 import '../service/coffee_service.dart';
+import '../service/users_service.dart';
 import '../views/caffeine_graph_painter.dart'; // Ensure this import is correct.
-import 'package:coffee_front/globals.dart' as globals;
 
 class currentCaffeineView extends StatefulWidget {
   const currentCaffeineView({super.key});
@@ -18,10 +18,12 @@ class _currentCaffeineView extends State<currentCaffeineView> {
   // 서버에서 가져온 커피 기록 데이터를 저장할 Future 객체
   Future<List<CoffeeRecord>>? _coffeeRecordsFuture;
   Timer? _timer;
+  int userIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _initializeUserIndex();
     // 서버에서 사용자의 마신 커피 기록을 비동기적으로 가져옵니다.
     _coffeeRecordsFuture = fetchDrinkedCoffees(1);
 
@@ -36,6 +38,11 @@ class _currentCaffeineView extends State<currentCaffeineView> {
     });
   }
 
+  void _initializeUserIndex() async {
+    userIndex = await getUserIndex();
+    // 필요한 경우 여기에서 추가적인 초기화 작업을 수행
+  }
+
   @override
   void dispose() {
     // 위젯이 dispose될 때 Timer를 취소합니다.
@@ -46,7 +53,7 @@ class _currentCaffeineView extends State<currentCaffeineView> {
   // 카페인 농도가 안전한 수준으로 떨어지는 시간을 계산하고 포맷팅하여 반환합니다.
   String calculateSafeToSleepTime(List<CoffeeRecord> coffeeRecords) {
     final caffeinePainter = CaffeineGraphPainter(
-      decayConstant: globals.globalDecayConstant,
+      decayConstant: 0.14,
       coffeeRecords: coffeeRecords,
     );
     final safeTime = caffeinePainter.goodToSleepTime();
@@ -102,7 +109,7 @@ class _currentCaffeineView extends State<currentCaffeineView> {
                   child: CustomPaint(
                     size: Size(graphWidth, 150),
                     painter: CaffeineGraphPainter(
-                      decayConstant: globals.globalDecayConstant,
+                      decayConstant: 0.14,
                       coffeeRecords: snapshot.data!,
                     ),
                   ),
